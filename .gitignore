@@ -1,0 +1,14 @@
+project_base/.idea
+project_base/build
+project_base/kernel
+project_base/kernel.asm
+project_base/.gdbinit
+project_base/.vscode
+project_base/*.s
+
+
+
+
+
+
+
