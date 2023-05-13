@@ -2,10 +2,10 @@
 // Created by lazar on 5/11/23.
 //
 
-#include "../h/MemoryAllocator.h"
+#include "../h/MemoryAllocator.hpp"
 #include "../lib/console.h"
-#include "../tests/MemoryAllocatorTest.h"
-#include "../h/Utility.h"
+#include "../tests/MemoryAllocatorTest.hpp"
+#include "../h/Utility.hpp"
 
 auto main() -> int {
 

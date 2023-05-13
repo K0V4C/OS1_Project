@@ -37,7 +37,7 @@ public:
 
     static MemoryAllocator& get_instance();
 
-    static void* allocate_blocks(size_t);
+    static void* allocate_blocks(uint64);
     static int free_blocks(void*);
 };
 

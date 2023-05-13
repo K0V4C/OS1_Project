@@ -1,5 +1,5 @@
 
-#include "../h/MemoryAllocator.h"
+#include "../h/MemoryAllocator.hpp"
 
 //Inspired by curriculums and practices
 
@@ -8,7 +8,7 @@ MemoryAllocator::MemoryAllocator() {
 
     start_free_mem->next = nullptr;
     start_free_mem->prev = nullptr;
-    start_free_mem->size = ((size_t)HEAP_END_ADDR - (size_t)HEAP_START_ADDR) / MEM_BLOCK_SIZE;
+    start_free_mem->size = ((uint64)HEAP_END_ADDR - (uint64)HEAP_START_ADDR) / MEM_BLOCK_SIZE;
 }
 
 //Joins 2 memory segments together if their addresses continue one another
@@ -36,7 +36,7 @@ auto MemoryAllocator::get_instance() -> MemoryAllocator& {
     return instance;
 }
 
-auto MemoryAllocator::allocate_blocks(size_t size)  -> void* {
+auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
 
     if(size < 1) {
         return nullptr;
@@ -85,7 +85,7 @@ auto MemoryAllocator::allocate_blocks(size_t size)  -> void* {
         else
             instance.start_free_mem = first_valid->next;
 
-        *(size_t*)first_valid = size;
+        *(uint64 *)first_valid = size;
 
         return ret;
     }
@@ -119,7 +119,7 @@ auto MemoryAllocator::allocate_blocks(size_t size)  -> void* {
     }
 
     //Prepare allocated memory
-    *(size_t*)first_valid = size;
+    *(uint64 *)first_valid = size;
     return ret;
 }
 
@@ -133,7 +133,7 @@ auto MemoryAllocator::free_blocks(void* adr) -> int {
     //Offset adr back one block
     adr = (void*)(((char*)adr) - MEM_BLOCK_SIZE);
     //From first block read how many blocks is needed to be dealloc
-    size_t size = *((size_t*)adr);
+    uint64 size = *((uint64 *)adr);
 
     MemoryAllocator& instance = MemoryAllocator::get_instance();
 
