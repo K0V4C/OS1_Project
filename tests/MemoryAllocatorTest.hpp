@@ -158,8 +158,50 @@ auto memory_allocator_run() -> int {
 
     // #################################################################################################################
     // Test 5
+    block_1 = MemoryAllocator::allocate_blocks(7);
+    kvc::__assert(first_addr, block_1);
+    block_2 = MemoryAllocator::allocate_blocks(7);
+    block_3 = MemoryAllocator::allocate_blocks(15);
+    block_4 = MemoryAllocator::allocate_blocks(7);
+    block_5 = MemoryAllocator::allocate_blocks(7);
+
+    kvc::new_line();
+    print_allocated(1, block_1);
+    print_allocated(2, block_2);
+    print_allocated(3, block_3);
+    print_allocated(4, block_4);
+    print_allocated(5, block_5);
+
+    kvc::__assert(PLUS_BLOCKS(mem_start, 48), instance.get_start());
+
+    MemoryAllocator::free_blocks(block_1);
+    kvc::__assert(instance.get_start(), mem_start);
+
+    MemoryAllocator::free_blocks(block_3);
+    kvc::__assert(mem_start, instance.get_start());
+
+    block_3 = MemoryAllocator::allocate_blocks(15);
+    kvc::__assert(instance.get_start(), mem_start);
+
+    block_1 = MemoryAllocator::allocate_blocks(7);
+    kvc::__assert(PLUS_BLOCKS(mem_start, 48), instance.get_start());
+
+
+    MemoryAllocator::free_blocks(block_5);
+    MemoryAllocator::free_blocks(block_1);
+    MemoryAllocator::free_blocks(block_3);
+    MemoryAllocator::free_blocks(block_2);
+    MemoryAllocator::free_blocks(block_4);
+
+    kvc::print_str("Test 6 passed\n\n");
+
+    // #################################################################################################################
+    // Test 6
+
     block_1 = MemoryAllocator::allocate_blocks(100);
     kvc::__assert(first_addr, block_1);
+
+
 
     return 0;
 }
