@@ -61,7 +61,11 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
     }
 
     FreeMem* iter;
-    for(iter = instance.start_free_mem; iter  && iter->size < size; iter = iter->next);
+    for(iter = instance.start_free_mem; iter->next  && iter->size < size; iter = iter->next);
+
+    // Check if there is enough memory
+    if(iter->size < size )
+        return nullptr;
 
     //Blocks of this size can not be found
     FreeMem* first_valid = iter;
