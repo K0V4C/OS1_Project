@@ -28,6 +28,7 @@ private:
     MemoryAllocator(MemoryAllocator&&) = delete;
 
     static void join(FreeMem*);
+    static void init_header(void*, uint64);
 
 public:
 

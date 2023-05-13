@@ -181,6 +181,7 @@ auto memory_allocator_run() -> int {
     kvc::__assert(mem_start, instance.get_start());
 
     block_3 = MemoryAllocator::allocate_blocks(15);
+    kvc::__assert(PLUS_BLOCKS(instance.get_start(), 17), block_3);
     kvc::__assert(instance.get_start(), mem_start);
 
     block_1 = MemoryAllocator::allocate_blocks(7);

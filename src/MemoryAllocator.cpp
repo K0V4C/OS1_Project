@@ -31,6 +31,15 @@ auto MemoryAllocator::join(FreeMem* obj) -> void {
 
 }
 
+auto MemoryAllocator::init_header(void * adr , uint64 size) -> void {
+    *(uint64 *)adr = size;
+
+    uint32 * start = (uint32*)adr + 2;
+    for(int i = 0; i < 14; i++){
+            start[i] = 0xDEADBEEF;
+    }
+}
+
 auto MemoryAllocator::get_instance() -> MemoryAllocator& {
     static MemoryAllocator instance;
     return instance;
@@ -85,7 +94,8 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
         else
             instance.start_free_mem = first_valid->next;
 
-        *(uint64 *)first_valid = size;
+        init_header(first_valid, size);
+
 
         return ret;
     }
@@ -119,7 +129,8 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
     }
 
     //Prepare allocated memory
-    *(uint64 *)first_valid = size;
+    init_header(first_valid, size);
+
     return ret;
 }
 
