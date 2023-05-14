@@ -13,19 +13,31 @@ namespace kvc {
     auto __assert(const void* a,const void* b) -> void{
         if(a == b)
             return;
-        while(true){}
+
+        volatile int dummy = 0;
+        while(true){
+            dummy++;
+        }
     }
 
     auto __assert(const uint64  a,const uint64 b) -> void{
         if(a == b)
             return;
-        while(true){}
+        
+        volatile int dummy = 0;
+        while(true){
+            dummy++;
+        }
     }
 
     auto __assert(const int a,const int b) -> void{
         if(a == b)
             return;
-        while(true){}
+
+        volatile int dummy = 0;
+        while(true){
+            dummy++;
+        }
     }
 
     auto print_int(int val) -> void {

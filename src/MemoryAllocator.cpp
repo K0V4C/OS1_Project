@@ -64,7 +64,7 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
     for(iter = instance.start_free_mem; iter->next  && iter->size < size; iter = iter->next);
 
     // Check if there is enough memory
-    if(iter->size < size )
+    if(iter->size < size && !iter->next)
         return nullptr;
 
     //Blocks of this size can not be found
@@ -140,14 +140,15 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
 
 auto MemoryAllocator::free_blocks(void* adr) -> int {
 
-    //Tried to free null
+    // Tried to free null
     if(adr == nullptr){
         return -1;
     }
 
-    //Offset adr back one block
+    // Offset adr back one block
+    void* raw = adr;
     adr = (void*)(((char*)adr) - MEM_BLOCK_SIZE);
-    //From first block read how many blocks is needed to be dealloc
+    // From first block read how many blocks is needed to be dealloc
     uint64 size = *((uint64 *)adr);
 
     MemoryAllocator& instance = MemoryAllocator::get_instance();
@@ -156,6 +157,22 @@ auto MemoryAllocator::free_blocks(void* adr) -> int {
 
     // Find first that is AFTER segment to dealloc
     for(; (void*)iter < adr && iter->next; iter = iter->next);
+
+    // Protection if trying to free already free memory
+
+    if(MemoryAllocator::overlaps(iter, raw)) return -2;
+
+    if(iter->next)
+        if(MemoryAllocator::overlaps(iter->next, raw)) return -2;
+
+    if(iter->prev)
+        if(MemoryAllocator::overlaps(iter->prev, raw)) return -2;
+
+    // TODO:
+    // Protection if pointer given is not aligned properly
+
+
+
 
     // Independent if inserting at start or later
     FreeMem* new_location = (FreeMem*)adr;

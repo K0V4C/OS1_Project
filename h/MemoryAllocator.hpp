@@ -30,6 +30,10 @@ private:
     static void join(FreeMem*);
     static void init_header(void*, uint64);
 
+    bool inline static overlaps(FreeMem* iter , void* raw) {
+        return (raw >= (void*)iter && raw < (void*)((char*)iter + iter->size*MEM_BLOCK_SIZE));
+    }
+
 public:
 
     const void* get_start() const {
