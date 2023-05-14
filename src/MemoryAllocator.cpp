@@ -138,16 +138,16 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
     return ret;
 }
 
-auto MemoryAllocator::free_blocks(void* adr) -> int {
+auto MemoryAllocator::free_blocks(void* raw) -> int {
 
     // Tried to free null
-    if(adr == nullptr){
+    if(raw == nullptr){
         return -1;
     }
 
     // Offset adr back one block
-    void* raw = adr;
-    adr = (void*)(((char*)adr) - MEM_BLOCK_SIZE);
+    void *adr = (void*)(((char*)raw) - MEM_BLOCK_SIZE);
+
     // From first block read how many blocks is needed to be dealloc
     uint64 size = *((uint64 *)adr);
 
