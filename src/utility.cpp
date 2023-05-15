@@ -136,17 +136,92 @@ namespace kvc {
                 "csrs sstatus, %[mask]"
                 :
                 : [mask] "r" (mask)
-                );
+        );
     }
     // mask clear?
-    inline uint64 read_sstatus(){
+    uint64 read_sstatus(){
         uint64 volatile val;
         __asm__ (
-            "csrr %[val], sstatus"
-            : [val] "=r" (val)
-            );
+                "csrr %[val], sstatus"
+                : [val] "=r" (val)
+        );
         return val;
     }
+    void write_sstatus(uint64 val){
+        __asm__ volatile(
+                "csrw sstatus, %[val]"
+                :
+                : [val] "r" (val)
+        );
 
+    }
+
+    uint64 read_scause(){
+        uint64 volatile val;
+        __asm__ (
+                "csrr %[val], scause"
+                : [val] "=r" (val)
+        );
+        return val;
+    }
+    void write_scause(uint64 val){
+        __asm__ volatile(
+                "csrw scause, %[val]"
+                :
+                : [val] "r" (val)
+        );
+
+    }
+
+    uint64 read_sepc(){
+        uint64 volatile val;
+        __asm__ (
+                "csrr %[val], sepc"
+                : [val] "=r" (val)
+        );
+        return val;
+    }
+    void write_sepc(uint64 val){
+        __asm__ volatile(
+                "csrw sepc, %[val]"
+                :
+                : [val] "r" (val)
+        );
+
+    }
+
+    uint64 read_stvec(){
+        uint64 volatile val;
+        __asm__ (
+                "csrr %[val], stvec"
+                : [val] "=r" (val)
+        );
+        return val;
+    }
+    void write_stvec(uint64 val){
+        __asm__ volatile(
+                "csrw stvec, %[val]"
+                :
+                : [val] "r" (val)
+        );
+
+    }
+
+    uint64 read_stval(){
+        uint64 volatile val;
+        __asm__ (
+                "csrr %[val], stval"
+                : [val] "=r" (val)
+        );
+        return val;
+    }
+    void write_stval(uint64 val){
+        __asm__ volatile(
+                "csrw stval, %[val]"
+                :
+                : [val] "r" (val)
+        );
+
+    }
 
 }

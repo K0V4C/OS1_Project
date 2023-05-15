@@ -17,26 +17,11 @@ enum TRAP_TYPE {
 };
 
 extern "C" void handle_supervisor_interrupt() {
+    uint64 volatile scause = kvc::read_scause();
 
-    kvc::print_str("WIWI");
-
-    uint64 volatile scause;
-    __asm__ volatile (
-            "csrr %[scause], scause"
-            : [scause] "=r" (scause)
-    );
-
-    uint64 volatile sepc;
-    __asm__ volatile(
-            "csrr %[sepc], sepc"
-            : [sepc] "=r" (sepc)
-    );
+    uint64 volatile sepc = kvc::read_sepc();
     sepc += 4;
-    __asm__ volatile(
-            "csrw sepc, %[val]"
-            :
-            : [val] "r" (sepc)
-    );
+    kvc::write_sepc(sepc);
 
     if(scause == SOFTWARE_INTR_3RD_LV || scause == HARDWARE_INTR){
         switch (scause){

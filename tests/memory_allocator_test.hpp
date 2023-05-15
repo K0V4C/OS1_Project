@@ -23,7 +23,7 @@ auto memory_allocator_run() -> int {
     kvc::new_line();
     auto& instance = MemoryAllocator::get_instance();
 
-    void *block_1, *block_2, *block_3, *block_4, *block_5, *block_6, *block_7, *block_8, *block_9, *block_10, *block11;
+    void *block_1, *block_2, *block_3, *block_4, *block_5, *block_6;
 
     kvc::print_str("Starting tests for Memory allocator: \n\n");
     // #################################################################################################################

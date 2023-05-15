@@ -36,6 +36,9 @@ inline void set_and_call(uint64 code){
 
 void* mem_alloc (size_t size) {
 
+    if(size <= 0)
+        return nullptr;
+
     uint64 blocks = size / MEM_BLOCK_SIZE + (size % MEM_BLOCK_SIZE) ? 1 : 0;
 
     uint64 volatile ptr;
@@ -52,8 +55,18 @@ void* mem_alloc (size_t size) {
 
 int mem_free (void* adr) {
 
+    if(adr == nullptr)
+        return -1;
 
-    return 0;
+    uint64 volatile ret;
+    set_and_call(MEM_FREE);
+
+    __asm__ volatile(
+            "mv %[mem],  a0"
+            : [mem] "=r" (ret)
+    );
+
+    return ret;
 }
 
 int thread_create (
