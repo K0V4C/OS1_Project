@@ -19,10 +19,6 @@ enum TRAP_TYPE {
 extern "C" void handle_supervisor_interrupt() {
     uint64 volatile scause = kvc::read_scause();
 
-    uint64 volatile sepc = kvc::read_sepc();
-    sepc += 4;
-    kvc::write_sepc(sepc);
-
     if(scause == SOFTWARE_INTR_3RD_LV || scause == HARDWARE_INTR){
         switch (scause){
             case SOFTWARE_INTR_3RD_LV:
