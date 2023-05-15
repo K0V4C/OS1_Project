@@ -7,6 +7,7 @@
 #include "../tests/memory_allocator_test.hpp"
 #include "../h/utility.hpp"
 #include "../h/interrupt_handler.hpp"
+#include "../h/syscall_c.hpp"
 
 extern "C" void trap_supervisor();
 
@@ -18,9 +19,12 @@ auto main() -> int {
             :
             : [addr] "r" (&trap_supervisor)
             );
-    //__asm__ volatile("csrs sstatus, 0x02");
 
-    __asm__ volatile("ecall");
+    void* t = mem_alloc(1024);
+
+//    //__asm__ volatile("csrs sstatus, 0x02");
+//
+//    __asm__ volatile("ecall");
 
     kvc::print_str("Uspeo\n");
 
