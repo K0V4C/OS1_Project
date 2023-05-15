@@ -1,5 +1,5 @@
 
-#include "../h/MemoryAllocator.hpp"
+#include "../h/memory_allocator.hpp"
 
 //Inspired by curriculums and practices
 

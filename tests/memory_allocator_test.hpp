@@ -5,9 +5,9 @@
 #ifndef TEST_MEM_ALLOCATOR
 #define TEST_MEM_ALLOCATOR
 
-#include "../h/MemoryAllocator.hpp"
+#include "../h/memory_allocator.hpp"
 #include "../lib/hw.h"
-#include "../h/Utility.hpp"
+#include "../h/utility.hpp"
 
 #define PLUS_BLOCKS(x, offs) (void*)((char*)x + offs*MEM_BLOCK_SIZE)
 #define MINUS_BLOCKS(x, offs) (void*)((char*)x - offs*MEM_BLOCK_SIZE)
