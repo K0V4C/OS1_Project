@@ -131,4 +131,22 @@ namespace kvc {
         __putc('\n');
     }
 
+    void ms_sstatus(uint64 mask){
+        __asm__ volatile(
+                "csrs sstatus, %[mask]"
+                :
+                : [mask] "r" (mask)
+                );
+    }
+    // mask clear?
+    inline uint64 read_sstatus(){
+        uint64 volatile val;
+        __asm__ (
+            "csrr %[val], sstatus"
+            : [val] "=r" (val)
+            );
+        return val;
+    }
+
+
 }

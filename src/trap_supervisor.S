@@ -9,7 +9,7 @@ trap_supervisor:
     sd ra, 0x00(sp)
 
     call handle_supervisor_interrupt
-    
+
     # Load regs
     ld ra, 0x00(sp)
     addi sp, sp, 16

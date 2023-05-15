@@ -28,7 +28,11 @@ auto main() -> int {
 
     kvc::print_str("Uspeo\n");
 
-//    memory_allocator_run();
+    memory_allocator_run();
+
+    uint64 x = kvc::read_scause();
+
+    kvc::write_sstatus(x);
 //
 //    uint64 * arr = (uint64 *)MemoryAllocator::allocate_blocks(125);
 //
