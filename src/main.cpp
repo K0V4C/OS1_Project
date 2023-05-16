@@ -3,19 +3,14 @@
 //
 
 #include "../h/memory_allocator.hpp"
-#include "../lib/console.h"
 #include "../tests/memory_allocator_test.hpp"
-#include "../h/interrupt_handler.hpp"
 #include "../h/syscall_c.hpp"
 #include "../h/utility.hpp"
 
 extern "C" void trap_supervisor();
 
 inline void set_stvec(){
-    __asm__ volatile("csrw stvec, %[addr]"
-            :
-            : [addr] "r" (&trap_supervisor)
-    );
+   kvc::write_stvec((uint64)&trap_supervisor);
 }
 
 auto main() -> int {
@@ -27,10 +22,6 @@ auto main() -> int {
     t = mem_alloc(512);
     mem_free(t);
     kvc::print_void(t);
-
-//    //__asm__ volatile("csrs sstatus, 0x02");
-//
-//    __asm__ volatile("ecall");
 
     kvc::print_str("Uspeo\n");
 

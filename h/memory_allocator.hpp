@@ -36,6 +36,10 @@ private:
 
 public:
 
+    static uint64 size_in_blocks(uint64 size_in_bytes) {
+        return size_in_bytes / MEM_BLOCK_SIZE + ((size_in_bytes % MEM_BLOCK_SIZE) ? 1 : 0);
+    }
+
     const void* get_start() const {
         return (void*)start_free_mem;
     }

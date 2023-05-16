@@ -4,6 +4,7 @@
 
 #include "../h/interrupt_handler.hpp"
 #include "../h/utility.hpp"
+#include "../h/output.hpp"
 #include "../h/bit_masks.hpp"
 #include "../h/abi.hpp"
 #include "../lib/hw.h"
@@ -22,19 +23,28 @@ inline void get_args(uint64* arr){
      __asm__ volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
  }
 
+ void print_status(uint64* arr) {
+    kvc::print_str("+----------------------------------------+\n");
+
+    kvc::print_void((void*)arr[0]);kvc::print_str("  <-- OP_CODE\n");
+    kvc::print_void((void*)arr[1]);kvc::print_str("  <-- A0\n");
+    kvc::print_void((void*)arr[2]);kvc::print_str("  <-- A1\n");
+    kvc::print_void((void*)arr[3]);kvc::print_str("  <-- A2\n");
+    kvc::print_void((void*)arr[4]);kvc::print_str("  <-- A3\n");
+
+    kvc::print_str("+----------------------------------------+\n");
+}
+
 extern "C" void handle_supervisor_interrupt() {
     uint64 args[5];
     // Arguments passed properly
+    // !!!!IMPORTANT THAT A0 STAYS THE SAME!!!!
     get_args(args);
-
-    kvc::print_void((void*)args[0]);kvc::new_line();
-    kvc::print_void((void*)args[1]);kvc::new_line();
-    kvc::print_void((void*)args[2]);kvc::new_line();
-    kvc::print_void((void*)args[3]);kvc::new_line();
-    kvc::print_void((void*)args[4]);kvc::new_line();
+    print_status(args);
 
     uint64 volatile scause = kvc::read_scause();
-    kvc::print_void((void*)args[4]);kvc::new_line();
+    kvc::print_void((void*)args[4]);kvc::print_str("  <-- SCAUSE\n");
+
     if(scause == TRAP_TYPE::software_interrupt_3rd_lv || scause == TRAP_TYPE::hardware_interrupt){
         switch (scause){
             case TRAP_TYPE::software_interrupt_3rd_lv:

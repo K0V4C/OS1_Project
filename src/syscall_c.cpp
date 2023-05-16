@@ -1,8 +1,3 @@
-//
-// Created by lazar on 5/15/23.
-//
-
-
 #include "../h/syscall_c.hpp"
 #include "../h/bit_masks.hpp"
 
@@ -16,40 +11,18 @@ inline void set_and_ecall(uint64 code) {
 }
 
 void* mem_alloc (size_t size) {
-
-    if(size <= 0)
-        return nullptr;
-
-    uint64 blocks = size / MEM_BLOCK_SIZE + ((size % MEM_BLOCK_SIZE) ? 1 : 0);
-
-    uint64 volatile ptr;
-
-    __asm__ volatile ("mv a0, %[blocks_size]": : [blocks_size] "r"  (blocks));
-    
+    __asm__ volatile ("mv a0, %[size_in_bytes]": : [size_in_bytes] "r"  (size));
     set_and_ecall(OP_CODES::c_allocate_memory);
-
-    __asm__ volatile(
-        "mv %[mem],  a0"
-        : [mem] "=r" (ptr)
-    );
-
+    uint64 volatile ptr;
+    __asm__ volatile("mv %[mem],  a0": [mem] "=r" (ptr));
     return (void*)ptr;
 }
 
 int mem_free (void* adr) {
-
-    if(adr == nullptr)
-        return -1;
-
-    uint64 volatile ret;
     set_and_ecall(OP_CODES::c_free_memory);
-
-    __asm__ volatile(
-            "mv %[mem],  a0"
-            : [mem] "=r" (ret)
-    );
-
-    return ret;
+    uint64 volatile ret;
+    __asm__ volatile("mv %[mem],  a0": [mem] "=r" (ret));
+    return (int)ret;
 }
 
 int thread_create (
