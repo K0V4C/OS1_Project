@@ -4,26 +4,42 @@
 
 #include "../h/interrupt_handler.hpp"
 #include "../h/utility.hpp"
+#include "../h/bit_masks.hpp"
+#include "../h/abi.hpp"
+#include "../lib/hw.h"
 
-enum TRAP_TYPE {
-    SOFTWARE_INTR_3RD_LV = 0x80000001,
-    HARDWARE_INTR        = 0x80000009,
-    ILLEGAL_INSTRUCTION  = 0x00000002,
-    ILLEGAL_READ_ADDR    = 0x00000005,
-    ILLEGAL_WRITE_ADDR   = 0x00000007,
-    ECALL_USR            = 0x00000008,
-    ECALL_SYS            = 0x00000009,
+#define sys_call_code args[0]
 
-};
+inline void get_args(uint64* arr){
+    __asm__ volatile("mv %[mem],  a0": [mem] "=r" (*arr));
+    __asm__ volatile("mv %[mem],  a1": [mem] "=r" (*(arr+1)));
+    __asm__ volatile("mv %[mem],  a2": [mem] "=r" (*(arr+2)));
+    __asm__ volatile("mv %[mem],  a3": [mem] "=r" (*(arr+3)));
+    __asm__ volatile("mv %[mem],  a4": [mem] "=r" (*(arr+4)));
+}
+
+ inline void set_return_value(uint64 ret) {
+     __asm__ volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
+ }
 
 extern "C" void handle_supervisor_interrupt() {
-    uint64 volatile scause = kvc::read_scause();
+    uint64 args[5];
+    // Arguments passed properly
+    get_args(args);
 
-    if(scause == SOFTWARE_INTR_3RD_LV || scause == HARDWARE_INTR){
+    kvc::print_void((void*)args[0]);kvc::new_line();
+    kvc::print_void((void*)args[1]);kvc::new_line();
+    kvc::print_void((void*)args[2]);kvc::new_line();
+    kvc::print_void((void*)args[3]);kvc::new_line();
+    kvc::print_void((void*)args[4]);kvc::new_line();
+
+    uint64 volatile scause = kvc::read_scause();
+    kvc::print_void((void*)args[4]);kvc::new_line();
+    if(scause == TRAP_TYPE::software_interrupt_3rd_lv || scause == TRAP_TYPE::hardware_interrupt){
         switch (scause){
-            case SOFTWARE_INTR_3RD_LV:
+            case TRAP_TYPE::software_interrupt_3rd_lv:
                 break;
-            case HARDWARE_INTR:
+            case TRAP_TYPE::hardware_interrupt:
                 break;
             default:
                 kvc::print_str("\n-------->This should not happen BNT\n");
@@ -31,20 +47,42 @@ extern "C" void handle_supervisor_interrupt() {
     }
 
     switch (scause) {
-            case ILLEGAL_INSTRUCTION:
+            case TRAP_TYPE::illegal_instruction:
                 break;
-            case ILLEGAL_READ_ADDR:
+            case TRAP_TYPE::illegal_read_address:
                 break;
-            case ILLEGAL_WRITE_ADDR:
+            case TRAP_TYPE::illegal_write_address:
                 break;
-            case ECALL_USR:
+            case TRAP_TYPE::user_ecall_interrupt:
+                if(sys_call_code == OP_CODES::c_allocate_memory) {
+                    uint64 ret = (uint64)ABI::mem_alloc(args[1]);
+                     set_return_value(ret);
+                    break;
+                }
+
+                if(sys_call_code == OP_CODES::c_free_memory) {
+                    uint64 ret = ABI::mem_free((void*)args[1]);
+                    set_return_value(ret);
+                    break;
+                }
+
                 break;
-            case ECALL_SYS:
-                break;
+            case TRAP_TYPE::system_ecall_interrupt:
+                if(sys_call_code == OP_CODES::c_allocate_memory) {
+                    uint64 ret = (uint64)ABI::mem_alloc(args[1]);
+                     set_return_value(ret);
+                    break;
+                }
+
+                if(sys_call_code == OP_CODES::c_free_memory) {
+                    uint64 ret = ABI::mem_free((void*)args[1]);
+                    set_return_value(ret);
+                    break;
+                }
             default:
                 kvc::print_str("\n------>This should not happen\n");
                 // panic!
-        }
     }
+}
 
 

@@ -23,7 +23,10 @@ auto main() -> int {
     kvc::print_str("Poceo\n");
 
     set_stvec();
-    void* t = mem_alloc(1024);
+    void *t = nullptr;
+    t = mem_alloc(512);
+    mem_free(t);
+    kvc::print_void(t);
 
 //    //__asm__ volatile("csrs sstatus, 0x02");
 //

@@ -27,13 +27,8 @@ namespace kvc {
 
     void new_line();
 
-    enum BitMasks{
-        SSTATUS_SPIE= 0x020,
-        SSTATUS_SPP = 0x100,
-        SSTATUS_SIE = 0x001,
 
-    };
-
+    // These are not inline so they can nullfiy register a0
     void ms_sstatus(uint64 mask);
     // mask clear?
     uint64 read_sstatus();
@@ -50,6 +45,7 @@ namespace kvc {
 
     uint64 read_stval();
     void write_stval(uint64 val);
+
 }
 
 

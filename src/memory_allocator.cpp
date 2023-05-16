@@ -91,8 +91,10 @@ auto MemoryAllocator::allocate_blocks(uint64 size)  -> void* {
 
     //Potential problem if memory is full
     if(first_valid->size == size){
-
-        first_valid->next->prev = first_valid->prev;
+        
+        if(first_valid->next)
+            first_valid->next->prev = first_valid->prev;
+            
         if(first_valid->prev)
             first_valid->prev->next = first_valid->next;
         else
