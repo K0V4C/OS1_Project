@@ -19,8 +19,11 @@ auto main() -> int {
 
     set_stvec();
     void *t = nullptr;
-    t = mem_alloc(512);
+    t = mem_alloc(513);
+    kvc::print_void(t);kvc::new_line();
     mem_free(t);
+    void* m = mem_alloc(512);
+    mem_free(m);
     kvc::print_void(t);
 
     kvc::print_str("Uspeo\n");

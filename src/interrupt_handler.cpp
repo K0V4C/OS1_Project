@@ -40,6 +40,7 @@ extern "C" void handle_supervisor_interrupt() {
     // Arguments passed properly
     // !!!!IMPORTANT THAT A0 STAYS THE SAME!!!!
     get_args(args);
+    // AFTER THIS IT IS WHATEVER
     print_status(args);
 
     uint64 volatile scause = kvc::read_scause();
