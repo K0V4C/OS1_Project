@@ -1,9 +1,5 @@
-//
-// Created by lazar on 5/11/23.
-//
-
-#include "../h/memory_allocator.hpp"
 #include "../tests/memory_allocator_test.hpp"
+#include "../tests/sys_calls_test.hpp"
 #include "../h/syscall_c.hpp"
 #include "../h/utility.hpp"
 

@@ -19,9 +19,9 @@ enum OP_CODES{
 
 
 enum SStatus{
-    SSTATUS_SPIE= 0x020,
-    SSTATUS_SPP = 0x100,
-    SSTATUS_SIE = 0x001,
+    SSTATUS_SPIE= 0x020, // Last SIE
+    SSTATUS_SPP = 0x100, // Mode user kernel
+    SSTATUS_SIE = 0x001, // Enable / disable interrupts
 
 };
 
