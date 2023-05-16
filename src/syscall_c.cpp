@@ -20,7 +20,7 @@ void* mem_alloc (size_t size) {
 
 int mem_free (void* adr) {
     set_and_ecall(OP_CODES::c_free_memory);
-    uint64 volatile ret;
+    uint64 volatile ret ;
     __asm__ volatile("mv %[mem],  a0": [mem] "=r" (ret));
     return (int)ret;
 }

@@ -11,19 +11,19 @@
 
 #define sys_call_code args[0]
 
-inline void get_args(uint64* arr){
-    __asm__ volatile("mv %[mem],  a0": [mem] "=r" (*arr));
-    __asm__ volatile("mv %[mem],  a1": [mem] "=r" (*(arr+1)));
-    __asm__ volatile("mv %[mem],  a2": [mem] "=r" (*(arr+2)));
-    __asm__ volatile("mv %[mem],  a3": [mem] "=r" (*(arr+3)));
-    __asm__ volatile("mv %[mem],  a4": [mem] "=r" (*(arr+4)));
+//inline void get_args(uint64* arr){
+//    __asm__ volatile("mv %[mem],  a0": [mem] "=r" (*arr));
+//    __asm__ volatile("mv %[mem],  a1": [mem] "=r" (*(arr+1)));
+//    __asm__ volatile("mv %[mem],  a2": [mem] "=r" (*(arr+2)));
+//    __asm__ volatile("mv %[mem],  a3": [mem] "=r" (*(arr+3)));
+//    __asm__ volatile("mv %[mem],  a4": [mem] "=r" (*(arr+4)));
+//}
+
+inline void set_return_value(uint64 ret) {
+    __asm__ volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
 }
 
- inline void set_return_value(uint64 ret) {
-     __asm__ volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
- }
-
- void print_status(uint64* arr) {
+void print_status(uint64* arr) {
     kvc::print_str("+----------------------------------------+\n");
 
     kvc::print_void((void*)arr[0]);kvc::print_str("  <-- OP_CODE\n");
@@ -37,10 +37,11 @@ inline void get_args(uint64* arr){
 
 extern "C" void handle_supervisor_interrupt() {
     uint64 args[5];
-    // Arguments passed properly
-    // !!!!IMPORTANT THAT A0 STAYS THE SAME!!!!
-    get_args(args);
-    // AFTER THIS IT IS WHATEVER
+    __asm__ volatile("mv %[mem],  a0": [mem] "=r" (*args));
+    __asm__ volatile("mv %[mem],  a1": [mem] "=r" (*(args+1)));
+    __asm__ volatile("mv %[mem],  a2": [mem] "=r" (*(args+2)));
+    __asm__ volatile("mv %[mem],  a3": [mem] "=r" (*(args+3)));
+    __asm__ volatile("mv %[mem],  a4": [mem] "=r" (*(args+4)));
     print_status(args);
 
     uint64 volatile scause = kvc::read_scause();

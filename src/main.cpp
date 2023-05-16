@@ -12,19 +12,13 @@ inline void set_stvec(){
 auto main() -> int {
 
     kvc::print_str("Poceo\n");
-
     set_stvec();
-    void *t = nullptr;
-    t = mem_alloc(513);
-    kvc::print_void(t);kvc::new_line();
-    mem_free(t);
-    void* m = mem_alloc(512);
-    mem_free(m);
-    kvc::print_void(t);
+
+    memory_allocator_run();
+    sys_calls_run();
 
     kvc::print_str("Uspeo\n");
 
-    memory_allocator_run();
 
 
     return 0;
