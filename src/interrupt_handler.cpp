@@ -34,7 +34,7 @@ extern "C" void handle_supervisor_interrupt() {
     asm volatile("mv %[mem],  a2": [mem] "=r" (*(args+2)));
     asm volatile("mv %[mem],  a3": [mem] "=r" (*(args+3)));
     asm volatile("mv %[mem],  a4": [mem] "=r" (*(args+4)));
-    print_status(args);
+//    print_status(args);
 
     uint64 volatile scause = kvc::read_scause();
     kvc::print_void((void*)args[4]);kvc::print_str("  <-- SCAUSE\n");
