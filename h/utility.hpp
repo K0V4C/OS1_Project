@@ -11,14 +11,22 @@
 
 namespace kvc {
 
-    inline void ms_sstatus(uint64 mask){
+    inline void mask_set_sstatus(uint64 mask){
         asm volatile(
                 "csrs sstatus, %[mask]"
                 :
                 : [mask] "r" (mask)
         );
     }
-    // mask clear?
+
+    inline void mask_clear_sstatus(uint64 mask){
+        asm volatile(
+                "csrc sstatus, %[mask]"
+                :
+                : [mask] "r" (mask)
+                );
+    }
+
     inline uint64 read_sstatus(){
         uint64 volatile val;
         asm (
@@ -30,6 +38,39 @@ namespace kvc {
     inline void write_sstatus(uint64 val){
         asm volatile(
                 "csrw sstatus, %[val]"
+                :
+                : [val] "r" (val)
+        );
+
+    }
+
+    inline void mask_set_sip(uint64 mask){
+        asm volatile(
+                "csrs sip, %[mask]"
+                :
+                : [mask] "r" (mask)
+        );
+    }
+
+    inline void mask_clear_sip(uint64 mask){
+        asm volatile(
+                "csrc sip, %[mask]"
+                :
+                : [mask] "r" (mask)
+        );
+    }
+
+    inline uint64 read_sip(){
+        uint64 volatile val;
+        asm (
+                "csrr %[val], sip"
+                : [val] "=r" (val)
+        );
+        return val;
+    }
+    inline void write_sip(uint64 val){
+        asm volatile(
+                "csrw sip, %[val]"
                 :
                 : [val] "r" (val)
         );
@@ -103,6 +144,7 @@ namespace kvc {
         );
 
     }
+    
 
 }
 

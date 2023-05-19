@@ -27,7 +27,7 @@ void print_status(uint64* arr) {
     kvc::print_str("+----------------------------------------+\n");
 }
 
-extern "C" void handle_supervisor_interrupt() {
+extern "C" void handle_ecall_and_exception() {
     uint64 args[5];
     asm volatile("mv %[mem],  a0": [mem] "=r" (*args));
     asm volatile("mv %[mem],  a1": [mem] "=r" (*(args+1)));
@@ -38,17 +38,6 @@ extern "C" void handle_supervisor_interrupt() {
 
     uint64 volatile scause = kvc::read_scause();
     kvc::print_void((void*)args[4]);kvc::print_str("  <-- SCAUSE\n");
-
-    if(scause == TRAP_TYPE::software_interrupt_3rd_lv || scause == TRAP_TYPE::hardware_interrupt){
-        switch (scause){
-            case TRAP_TYPE::software_interrupt_3rd_lv:
-                break;
-            case TRAP_TYPE::hardware_interrupt:
-                break;
-            default:
-                kvc::print_str("\n-------->This should not happen BNT\n");
-        }
-    }
 
     switch (scause) {
             case TRAP_TYPE::illegal_instruction:
@@ -87,6 +76,16 @@ extern "C" void handle_supervisor_interrupt() {
                 kvc::print_str("\n------>This should not happen\n");
                 // panic!
     }
+}
+
+extern "C" void handle_third_lv_interrupt() {
+    kvc::mask_clear_sip(0x02);
+    kvc::write_sstatus(0x00);
+    kvc::print_str("handle_third_lv_interrupt\n");
+}
+
+extern "C" void handle_hardware_interrupt() {
+    kvc::print_str("handle hardware interrupt\n");
 }
 
 

@@ -6,13 +6,16 @@
 extern "C" void trap_supervisor();
 
 inline void set_stvec(){
-   kvc::write_stvec((uint64)&trap_supervisor);
+   kvc::write_stvec((uint64)((char*)&trap_supervisor + 1));
 }
 
 auto main() -> int {
 
     kvc::print_str("Poceo\n");
     set_stvec();
+
+    // Uncomment to test timers
+    // kvc::write_sstatus(0x02);
 
     memory_allocator_run();
     sys_calls_run();

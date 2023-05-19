@@ -26,13 +26,13 @@ enum SStatus{
 };
 
 enum TRAP_TYPE {
-    software_interrupt_3rd_lv = 0x80000001,
-    hardware_interrupt        = 0x80000009,
-    illegal_instruction       = 0x00000002,
-    illegal_read_address      = 0x00000005,
-    illegal_write_address     = 0x00000007,
-    user_ecall_interrupt      = 0x00000008,
-    system_ecall_interrupt    = 0x00000009,
+    software_interrupt_3rd_lv = 0x8000000000000001,
+    hardware_interrupt        = 0x8000000000000009,
+    illegal_instruction       = 0x0000000000000002,
+    illegal_read_address      = 0x0000000000000005,
+    illegal_write_address     = 0x0000000000000007,
+    user_ecall_interrupt      = 0x0000000000000008,
+    system_ecall_interrupt    = 0x0000000000000009,
 
 };
 
