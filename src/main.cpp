@@ -12,6 +12,7 @@ inline void set_stvec(){
 auto main() -> int {
 
     kvc::print_str("Poceo\n");
+
     set_stvec();
 
     // Uncomment to test timers

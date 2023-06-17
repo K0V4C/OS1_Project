@@ -19,7 +19,7 @@ namespace  kvc {
 
     void print_uint64(uint64 val);
 
-    void print_void(void *ptr);
+    void print_void(const void *ptr);
 
     void print_str(const char*);
 

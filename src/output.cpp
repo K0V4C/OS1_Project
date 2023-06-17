@@ -98,7 +98,7 @@ namespace kvc {
 
     }
 
-    void print_void(void *ptr)  {
+    void print_void(const void *ptr)  {
 
         const char table[] = {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
@@ -108,8 +108,10 @@ namespace kvc {
 
         uint64 bytes = (uint64) ptr;
 
-        for (int i = sizeof(void *); i > 0; i--) {
-            uint8 high = (bytes & 0xf0000000) >> 28;
+        for (int i = sizeof(void *) * 2; i > 0; i--) {
+            // for shorter version uncomment code under this and remove 2 above for i
+            // uint8 high = (bytes & 0xf0000000) >> 28;
+            uint8 high = (bytes & 0xf000000000000000) >> 60;
             bytes <<= 4;
             __putc(table[high]);
         }
