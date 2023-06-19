@@ -10,7 +10,7 @@ inline void set_and_ecall(uint64 code) {
     asm volatile("ecall");
 }
 
-#define  SET_RET(ret) asm volatile("mv %[mem],  a0": [mem] "=r" (ret))
+#define SET_RET(ret) asm volatile("mv %[mem],  a0": [mem] "=r" (ret))
 
 void* mem_alloc (size_t size) {
     asm volatile ("mv a0, %[size_in_bytes]": : [size_in_bytes] "r"  (size));
@@ -23,7 +23,7 @@ void* mem_alloc (size_t size) {
 int mem_free (void* adr) {
     set_and_ecall(OP_CODES::c_free_memory);
     uint64 volatile ret ;
-    SET_RET(ret); //asm volatile("mv %[mem],  a0": [mem] "=r" (ret));
+    SET_RET(ret); // asm volatile("mv %[mem],  a0": [mem] "=r" (ret));
     return (int)ret;
 }
 
