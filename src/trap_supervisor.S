@@ -1,4 +1,6 @@
-.extern InterruptHandler
+.extern handle_ecall_and_exception
+.extern handle_third_lv_interrupt
+.extern handle_hardware_interrupt
 .global trap_supervisor
 .align 4
 trap_supervisor:
