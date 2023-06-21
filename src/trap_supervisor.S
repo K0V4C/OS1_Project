@@ -9,7 +9,7 @@ trap_supervisor:
     nop
     nop
     nop
-    nop
+    nop # make these jump to panic!
     nop
     nop
     nop

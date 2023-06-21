@@ -217,12 +217,16 @@ auto memory_allocator_run() -> int {
 
     MemoryAllocator::free_blocks(block_3);
 
-    kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_1, 1))); // Radnom in first free block
+    kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_1, 1))); // Random in first free block
     kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_1, 15))); // At the start of second block
-    kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(mem_start, 7))); // 7th blokc in 1st free block
+    kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(mem_start, 7))); // 7th block in 1st free block
     kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_3, 6))); // last block in free seg
     kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_4, 7))); // Last free mem seg
-    kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_4, 100))); // Somewhere radnom at the end
+    kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_4, 100))); // Somewhere random at the end
+
+    // Well for these 2 lines i waster 30mins of my life
+    MemoryAllocator::free_blocks(block_2);
+    MemoryAllocator::free_blocks(block_4);
 
     kvc::print_str("Test 6 passed \n\n");
 
@@ -231,6 +235,10 @@ auto memory_allocator_run() -> int {
 
     block_1 = MemoryAllocator::allocate_blocks(7);
     kvc::__assert(first_addr, block_1);
+
+    MemoryAllocator::free_blocks(block_1);
+
+    // kvc::print_void((void*)MemoryAllocator::get_instance().get_start());
 
 
 
