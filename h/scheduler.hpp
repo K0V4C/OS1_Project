@@ -5,29 +5,27 @@
 #ifndef SCHEDULER_HPP
 #define SCHEDULER_HPP
 
-#include "TCB.hpp"
+#include "tcb.hpp"
 
 class Scheduler {
 private:
 
-    class scheduled_node {
+    struct scheduled_node {
     public:
-        TCB* value;
+        tcb* value;
         scheduled_node* next;
     };
 
     scheduled_node* head = nullptr;
     scheduled_node* tail = nullptr;
 
-public:
-
-    Scheduler(): head(nullptr){}
-
     static Scheduler& get_instance();
 
-    static TCB* get();
+public:
 
-    static int put(TCB*);
+    static tcb* get();
+
+    static int put(tcb*);
 
 };
 

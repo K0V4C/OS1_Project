@@ -95,7 +95,7 @@ extern "C" void handle_ecall_and_exception() {
                 }
             default:
                 kvc::print_str("\n------>This should not happen\n");
-                kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
+                print_status(args);
 
                 panic("Unknown condition");
                 // panic!

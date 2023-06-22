@@ -10,7 +10,7 @@ Scheduler &Scheduler::get_instance() {
     return instance;
 }
 
-int Scheduler::put(TCB* tcb) {
+int Scheduler::put(tcb* tcb) {
     Scheduler instance = Scheduler::get_instance();
 
     scheduled_node* new_node = (scheduled_node*) MemoryAllocator::allocate_blocks(
@@ -33,7 +33,7 @@ int Scheduler::put(TCB* tcb) {
     return 0;
 }
 
-TCB *Scheduler::get() {
+tcb *Scheduler::get() {
     Scheduler instance = Scheduler::get_instance();
 
     if(instance.head == nullptr)
@@ -45,7 +45,7 @@ TCB *Scheduler::get() {
     if(instance.head == nullptr)
         instance.tail = nullptr;
 
-    TCB* ret = return_node->value;
+    tcb* ret = return_node->value;
     MemoryAllocator::free_blocks((void*)return_node);
 
     return ret;
