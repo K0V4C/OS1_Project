@@ -6,6 +6,7 @@
 #define SCHEDULER_HPP
 
 #include "tcb.hpp"
+#include "memory_allocator.hpp"
 
 class Scheduler {
 private:

@@ -16,12 +16,13 @@ private:
 
     Body body;
     uint64* stack;
-    bool state;
+    bool finished;
 
     static TCB* running;
 
     class Context {
     public:
+        uint64 ra;
         uint64 sp;
     };
 
@@ -29,15 +30,14 @@ private:
 
 public:
 
-    void setFinished(bool state) {this->state = state;}
-    bool isFinished() {return this->state;}
+    void setFinished(bool finished) {this->finished = finished;}
+    bool isFinished() {return this->finished;}
 
     static void yield();
     static void dispatch();
     static void context_switch(Context* old_context, Context* new_context);
 
     static TCB* create_thread(Body body);
-
 
 };
 
