@@ -10,9 +10,9 @@
 class Scheduler {
 private:
 
-    struct scheduled_node {
+    class scheduled_node {
     public:
-        tcb* value;
+        TCB* value;
         scheduled_node* next;
     };
 
@@ -23,9 +23,9 @@ private:
 
 public:
 
-    static tcb* get();
+    static TCB* get();
 
-    static int put(tcb*);
+    static int put(TCB*);
 
 };
 

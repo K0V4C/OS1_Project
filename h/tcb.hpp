@@ -2,12 +2,14 @@
 // Created by lazar on 6/22/23.
 //
 
+// Whole class inspired by videos from practices
+
 #ifndef TCB_HPP
 #define TCB_HPP
 
 #include "../lib/hw.h"
 
-class tcb {
+class TCB {
 public:
     using Body = void (*)();
 private:
@@ -16,16 +18,25 @@ private:
     uint64* stack;
     bool state;
 
+    static TCB* running;
+
+    class Context {
+    public:
+        uint64 sp;
+    };
+
+    Context context;
+
 public:
 
-    void set_state(bool state) {this->state = state;}
-    bool get_state() {return this->state;}
+    void setFinished(bool state) {this->state = state;}
+    bool isFinished() {return this->state;}
 
     static void yield();
+    static void dispatch();
+    static void context_switch(Context* old_context, Context* new_context);
 
-    uint64 sp;
-
-    static tcb* create_thread(Body body);
+    static TCB* create_thread(Body body);
 
 
 };

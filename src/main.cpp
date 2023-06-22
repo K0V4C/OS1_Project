@@ -2,6 +2,7 @@
 #include "../tests/sys_calls_test.hpp"
 #include "../h/syscall_c.hpp"
 #include "../h/utility.hpp"
+#include "../h/tcb.hpp"
 
 extern "C" void trap_supervisor();
 
@@ -22,6 +23,7 @@ auto main() -> int {
     sys_calls_run();
 
     kvc::print_str("Uspeo\n");
+
 
 
 
