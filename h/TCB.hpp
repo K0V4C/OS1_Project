@@ -5,4 +5,11 @@
 #ifndef TCB_HPP
 #define TCB_HPP
 
-#endif //OS1_PROJECT_TCB_HPP
+class TCB {
+private:
+
+public:
+
+};
+
+#endif // TCB_HPP
