@@ -24,6 +24,15 @@ void print_status(uint64* arr) {
     kvc::print_void((void*)arr[3]);kvc::print_str("  <-- A2\n");
     kvc::print_void((void*)arr[4]);kvc::print_str("  <-- A3\n");
 
+    uint64 volatile scause = riscv::read_scause();
+    kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
+
+    uint64 volatile sepc = riscv::read_sepc();
+    kvc::print_uint64(sepc);kvc::print_str("  <-- SEPC\n");
+
+    uint64 volatile stval = riscv::read_stval();
+    kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
+
     kvc::print_str("+----------------------------------------+\n");
 }
 
@@ -47,7 +56,6 @@ extern "C" void handle_ecall_and_exception() {
     print_status(args);
 
     uint64 volatile scause = riscv::read_scause();
-    kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
 
     switch (scause) {
             case TRAP_TYPE::illegal_instruction:
@@ -87,6 +95,8 @@ extern "C" void handle_ecall_and_exception() {
                 }
             default:
                 kvc::print_str("\n------>This should not happen\n");
+                kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
+
                 panic("Unknown condition");
                 // panic!
     }
