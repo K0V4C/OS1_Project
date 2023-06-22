@@ -224,7 +224,7 @@ auto memory_allocator_run() -> int {
     kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_4, 7))); // Last free mem seg
     kvc::__assert(-2, MemoryAllocator::free_blocks(PLUS_BLOCKS(block_4, 100))); // Somewhere random at the end
 
-    // Well for these 2 lines i waster 30mins of my life
+    // Well for these 2 lines i wasted 30mins of my life
     MemoryAllocator::free_blocks(block_2);
     MemoryAllocator::free_blocks(block_4);
 

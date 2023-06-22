@@ -9,7 +9,7 @@
 #include "../lib/console.h"
 #include "../lib/hw.h"
 
-namespace kvc {
+namespace riscv {
 
     inline void mask_set_sstatus(uint64 mask){
         asm volatile(

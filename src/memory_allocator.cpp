@@ -1,7 +1,7 @@
 
 #include "../h/memory_allocator.hpp"
 
-//Inspired by curriculums and practices
+// Inspired by curriculums and practices
 
 MemoryAllocator::MemoryAllocator() {
     start_free_mem = (FreeMem*)HEAP_START_ADDR;
