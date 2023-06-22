@@ -11,6 +11,13 @@
 class Scheduler {
 private:
 
+    //REDACTED
+    Scheduler(Scheduler&) = delete;
+    Scheduler(Scheduler&&) = delete;
+
+    // DEFAULT
+    Scheduler() {}
+
     class scheduled_node {
     public:
         TCB* value;

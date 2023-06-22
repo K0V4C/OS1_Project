@@ -4,6 +4,7 @@
 
 #include "../h/scheduler.hpp"
 #include "../h/memory_allocator.hpp"
+#include "../h/output.hpp"
 
 Scheduler &Scheduler::get_instance() {
     static Scheduler instance;
@@ -11,7 +12,7 @@ Scheduler &Scheduler::get_instance() {
 }
 
 int Scheduler::put(TCB* tcb) {
-    Scheduler instance = Scheduler::get_instance();
+    Scheduler& instance = Scheduler::get_instance();
 
     scheduled_node* new_node = (scheduled_node*) MemoryAllocator::allocate_blocks(
             MemoryAllocator::size_in_blocks(sizeof(scheduled_node))
@@ -22,6 +23,8 @@ int Scheduler::put(TCB* tcb) {
 
     new_node->value = tcb;
 
+    kvc::print_void(new_node);
+
     if(instance.head == nullptr) {
         instance.head = new_node;
         instance.tail = new_node;
@@ -30,11 +33,16 @@ int Scheduler::put(TCB* tcb) {
         instance.tail = new_node;
     }
 
+    kvc::print_void(instance.head); kvc::new_line();
+    kvc::print_void(instance.tail); kvc::new_line();
+    kvc::print_void(new_node->next); kvc::new_line();
+    kvc::new_line();
+
     return 0;
 }
 
 TCB *Scheduler::get() {
-    Scheduler instance = Scheduler::get_instance();
+    Scheduler& instance = Scheduler::get_instance();
 
     if(instance.head == nullptr)
         return nullptr;

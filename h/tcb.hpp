@@ -18,8 +18,6 @@ private:
     uint64* stack;
     bool finished;
 
-    static TCB* running;
-
     class Context {
     public:
         uint64 ra;
@@ -30,8 +28,10 @@ private:
 
 public:
 
+    static TCB* running;
+
     void setFinished(bool finished) {this->finished = finished;}
-    bool isFinished() {return this->finished;}
+    bool isFinished() const {return finished;}
 
     static void yield();
     static void dispatch();
