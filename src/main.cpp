@@ -17,11 +17,9 @@ auto main() -> int {
 
     // Uncomment to test timers
     // riscv::write_sstatus(0x02);
-
-//    memory_allocator_run();
 //    sys_calls_run();
     sync_test_run();
-
+    memory_allocator_run();
 
     kvc::print_str("Uspeo\n");
 

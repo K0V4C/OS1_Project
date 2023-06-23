@@ -61,18 +61,15 @@ void *TCB::operator new(size_t size) {
             );
 }
 
-void TCB::operator delete(void *ptr) {
-    MemoryAllocator::free_blocks(ptr);
-}
 
 TCB::TCB(TCB::Body body):body(body) {
 
     stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(
             MemoryAllocator::size_in_blocks(
-                    sizeof(uint64)* DEFAULT_STACK_SIZE*100)
+                    sizeof(uint64)* DEFAULT_STACK_SIZE)
                     ): nullptr;
 
-    uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE*100] : 0;
+    uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
     context = {
             (uint64)body, sp_start
     };
@@ -81,6 +78,10 @@ TCB::TCB(TCB::Body body):body(body) {
 
     if(body) Scheduler::put(this);
 
+}
+
+void TCB::free() {
+    MemoryAllocator::free_blocks(stack);
 }
 
 
