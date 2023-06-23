@@ -29,6 +29,8 @@ public:
 
     static TCB* running;
 
+    TCB(Body body);
+
     void setFinished(bool finished) {this->finished = finished;}
     bool isFinished() const {return finished;}
 
@@ -38,6 +40,8 @@ public:
 
     static TCB* create_thread(Body body);
 
+    void* operator new(size_t size);
+    void operator delete (void* ptr);
 };
 
 #endif // TCB_HPP

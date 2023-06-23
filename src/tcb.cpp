@@ -15,7 +15,7 @@ extern "C" void pop_registers();
 TCB* TCB::running = 0;
 
 TCB *TCB::create_thread(TCB::Body body) {
-
+    /* C like way
     TCB* new_tcb = (TCB*) MemoryAllocator::allocate_blocks(
             MemoryAllocator::size_in_blocks(sizeof (TCB))
             );
@@ -35,6 +35,8 @@ TCB *TCB::create_thread(TCB::Body body) {
     if(body) Scheduler::put(new_tcb);
 
     return new_tcb;
+     */
+    return new TCB(body);
 
 }
 
@@ -51,6 +53,34 @@ void TCB::dispatch() {
     TCB::running = Scheduler::get();
 
     TCB::context_switch(&old->context, &running->context);
+}
+
+void *TCB::operator new(size_t size) {
+    return MemoryAllocator::allocate_blocks(
+            MemoryAllocator::size_in_blocks(size)
+            );
+}
+
+void TCB::operator delete(void *ptr) {
+    MemoryAllocator::free_blocks(ptr);
+}
+
+TCB::TCB(TCB::Body body):body(body) {
+
+    stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(
+            MemoryAllocator::size_in_blocks(
+                    sizeof(uint64)* DEFAULT_STACK_SIZE*100)
+                    ): nullptr;
+
+    uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE*100] : 0;
+    context = {
+            (uint64)body, sp_start
+    };
+
+    finished = false;
+
+    if(body) Scheduler::put(this);
+
 }
 
 

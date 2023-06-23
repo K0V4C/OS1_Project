@@ -9,8 +9,6 @@
 #include "../h/output.hpp"
 
 int fib(int n) {
-//    kvc::print_str("\nFib number: ");
-//    kvc::print_int(n); kvc::new_line();
     if(n <= 1) return n;
     if(n % 4 == 0) TCB::yield();
     return fib(n-1) + fib(n-2);
@@ -27,7 +25,7 @@ void worker_a() {
 
     TCB::yield();
 
-    int val = fib(20);
+    int val = fib(34);
     kvc::print_str("Fibonaci A is: ");
     kvc::print_int(val);
     kvc::new_line();
