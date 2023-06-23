@@ -22,6 +22,9 @@ private:
     public:
         TCB* value;
         scheduled_node* next;
+
+        void* operator new(size_t size);
+        void operator delete (void* ptr);
     };
 
     scheduled_node* head = nullptr;

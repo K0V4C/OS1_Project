@@ -14,9 +14,11 @@ Scheduler &Scheduler::get_instance() {
 int Scheduler::put(TCB* tcb) {
     Scheduler& instance = Scheduler::get_instance();
 
-    scheduled_node* new_node = (scheduled_node*) MemoryAllocator::allocate_blocks(
-            MemoryAllocator::size_in_blocks(sizeof(scheduled_node))
-            );
+//    scheduled_node* new_node = (scheduled_node*) MemoryAllocator::allocate_blocks(
+//            MemoryAllocator::size_in_blocks(sizeof(scheduled_node))
+//            );
+
+    scheduled_node* new_node = new scheduled_node();
 
     if(!new_node)
         return -1; // Exception // Should this panic?
@@ -54,3 +56,12 @@ TCB *Scheduler::get() {
 }
 
 
+void *Scheduler::scheduled_node::operator new(size_t size) {
+    return MemoryAllocator::allocate_blocks(
+            MemoryAllocator::size_in_blocks(size)
+            );
+}
+
+void Scheduler::scheduled_node::operator delete(void* ptr) {
+    MemoryAllocator::free_blocks(ptr);
+}
