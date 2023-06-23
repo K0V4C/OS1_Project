@@ -18,8 +18,7 @@ private:
     uint64* stack;
     bool finished;
 
-    class Context {
-    public:
+    struct Context {
         uint64 ra;
         uint64 sp;
     };

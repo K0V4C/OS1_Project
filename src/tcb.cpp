@@ -23,9 +23,9 @@ TCB *TCB::create_thread(TCB::Body body) {
     if (!new_tcb) return nullptr;
 
     new_tcb->body = body;
-    new_tcb->stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(DEFAULT_STACK_SIZE)) : nullptr;
+    new_tcb->stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(sizeof(uint64)* DEFAULT_STACK_SIZE)) : nullptr;
 
-    uint64 sp_start = new_tcb->stack != nullptr ? (uint64) &(new_tcb->stack[DEFAULT_STACK_SIZE]) : 0;
+    uint64 sp_start = new_tcb->stack != nullptr ? (uint64) &new_tcb->stack[DEFAULT_STACK_SIZE] : 0;
     new_tcb->context = {
             (uint64)body, sp_start
     };

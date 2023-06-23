@@ -22,8 +22,7 @@ int Scheduler::put(TCB* tcb) {
         return -1; // Exception // Should this panic?
 
     new_node->value = tcb;
-
-    kvc::print_void(new_node);
+    new_node->next = nullptr;
 
     if(instance.head == nullptr) {
         instance.head = new_node;
@@ -32,11 +31,6 @@ int Scheduler::put(TCB* tcb) {
         instance.tail->next = new_node;
         instance.tail = new_node;
     }
-
-    kvc::print_void(instance.head); kvc::new_line();
-    kvc::print_void(instance.tail); kvc::new_line();
-    kvc::print_void(new_node->next); kvc::new_line();
-    kvc::new_line();
 
     return 0;
 }
