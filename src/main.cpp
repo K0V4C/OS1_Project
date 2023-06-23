@@ -23,8 +23,5 @@ auto main() -> int {
 
     kvc::print_str("Uspeo\n");
 
-
-
-
     return 0;
 }
