@@ -17,7 +17,7 @@ void worker_A() {
         kvc::print_str("A: i= ");
         kvc::print_int(i);
         kvc::new_line();
-        for(uint64 j = 0; j < 10000; j ++){
+        for(uint64 j = 0; j < 30000; j ++){
             for(uint64 k = 0; k < 30000; k++){
                 // we waitin
             }
@@ -35,7 +35,7 @@ void worker_B() {
         kvc::print_int(i);
         kvc::new_line();
         for(uint64 j = 0; j < 10000; j ++){
-            for(uint64 k = 0; k < 300; k++){
+            for(uint64 k = 0; k < 30000; k++) {
                 // we waitin
             }
         }
@@ -45,18 +45,28 @@ void worker_B() {
 }
 
 void worker_C() {
-    kvc::print_str("\nC start\n");
-
-    for(uint64 i = 0; i < 10; i++ ){
-        kvc::print_str("C: i= ");
+    kvc::print_str("\nWorker staring\n");
+    for(int i = 0; i < 3; i++) {
+        kvc::print_str("C = ");
         kvc::print_int(i);
         kvc::new_line();
-        for(uint64 j = 0; j < 1000; j ++){
-            for(uint64 k = 0; k < 30000; k++){
-                // we waitin
-            }
-        }
     }
+
+    TCB::yield();
+
+    int val = fib(30, "wc");
+    kvc::print_str("Fibonaci C is: ");
+    kvc::print_int(val);
+    kvc::new_line();
+
+
+    kvc::print_str("\nWorker stoping\n");
+    for(int i = 0; i < 3; i++) {
+        kvc::print_str("C = ");
+        kvc::print_int(i);
+        kvc::new_line();
+    }
+
 
     kvc::print_str("\nC end\n");
 }

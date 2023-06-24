@@ -17,9 +17,8 @@ private:
     Body body;
     uint64* stack;
     bool finished;
+    bool blocked;
     uint64 time_slice;
-
-    static uint64 const TIME_SLICE = 2;
 
     struct Context {
         uint64 ra;
@@ -31,6 +30,7 @@ private:
     TCB(Body body, uint64 time_slice);
 
     static void thread_wrapper();
+    static uint64 const TIME_SLICE = DEFAULT_TIME_SLICE;
 
 public:
 
@@ -39,6 +39,9 @@ public:
 
     void setFinished(bool finished) {this->finished = finished;}
     bool isFinished() const {return finished;}
+
+    void set_blocked(bool blocked) {this->blocked = blocked;}
+    bool is_blocked() const {return blocked;}
 
     uint64 get_time_slice() {return time_slice; }
 

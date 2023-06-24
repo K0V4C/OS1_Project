@@ -62,9 +62,11 @@ extern "C" void handle_ecall_and_exception() {
     asm volatile("mv %[mem],  a2": [mem] "=r" (*(args+2)));
     asm volatile("mv %[mem],  a3": [mem] "=r" (*(args+3)));
     asm volatile("mv %[mem],  a4": [mem] "=r" (*(args+4)));
-//    print_status(args);
+    // print_status(args);
 
     uint64 volatile scause = riscv::read_scause();
+
+    // case is just stupid
     uint64 sepc, sstatus;
 
     switch (scause) {
@@ -95,7 +97,6 @@ extern "C" void handle_ecall_and_exception() {
 
                 sepc = riscv::read_sepc();
                 sstatus = riscv::read_sstatus();
-                TCB::time_slice_counter = 0;
                 TCB::dispatch();
                 riscv::write_sstatus(sstatus);
                 riscv::write_sepc(sepc);
@@ -106,7 +107,6 @@ extern "C" void handle_ecall_and_exception() {
                 print_status(args);
 
                 panic("Unknown condition");
-                // panic!
     }
 }
 
@@ -114,10 +114,9 @@ extern "C" void handle_third_lv_interrupt() {
     // timer interrupt
 
     // sip -> supervisor interrupt pending
-//    kvc::print_str("AAAAAA");
+
     TCB::time_slice_counter++;
     if(TCB::running->time_slice_counter >= TCB::running->get_time_slice()) {
-//        kvc::print_str("EEEEEEE");
         uint64 sepc = riscv::read_sepc();
         uint64  sstatus = riscv::read_sstatus();
         TCB::time_slice_counter = 0;
@@ -128,15 +127,12 @@ extern "C" void handle_third_lv_interrupt() {
 
 
     riscv::mask_clear_sip(SIP::SIP_SSIP); // Write 0 to signal interrupt finished
-
-
-//    kvc::print_str("handle_third_lv_interrupt\n");
 }
 
 extern "C" void handle_hardware_interrupt() {
     // do this yourself
     console_handler();
-//    kvc::print_str("handle hardware interrupt\n");
+
 }
 
 

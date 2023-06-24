@@ -117,8 +117,6 @@ auto sync_test_run() -> void {
     threads[2] = TCB::create_thread(worker_b);
     threads[3] = TCB::create_thread(worker_c);
 
-//    while(!threads[1]->isFinished())
-//        TCB::yield();
     while(!threads[1]->isFinished() or !threads[3]->isFinished() or !threads[2]->isFinished())
         TCB::yield();
 

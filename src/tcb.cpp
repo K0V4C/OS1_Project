@@ -52,7 +52,7 @@ void TCB::yield() {
 
 void TCB::dispatch() {
     TCB* old = TCB::running;
-    if(!old->isFinished())  Scheduler::put(old);
+    if(!old->isFinished() && !old->is_blocked())  Scheduler::put(old);
     TCB::running = Scheduler::get();
 
     TCB::context_switch(&old->context, &running->context);
@@ -78,7 +78,7 @@ void TCB::thread_wrapper() {
 
 
 
-TCB::TCB(TCB::Body body, uint64 time_slice = DEFAULT_TIME_SLICE):
+TCB::TCB(TCB::Body body, uint64 time_slice ):
     body(body), time_slice(time_slice) {
 
     stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(
@@ -92,6 +92,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice = DEFAULT_TIME_SLICE):
     };
 
     finished = false;
+    blocked = false;
 
     if(body) Scheduler::put(this);
 

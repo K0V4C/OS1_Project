@@ -3,6 +3,7 @@
 #include "../h/tcb.hpp"
 #include "../tests/sync_tests.h"
 #include "../tests/async_tests.hpp"
+#include "../tests/semaphore_test.hpp"
 
 extern "C" void trap_supervisor();
 
@@ -16,12 +17,10 @@ auto main() -> int {
 
     set_stvec();
 
-    // Uncomment to test timers
-    // riscv::write_sstatus(0x02);
 //    sys_calls_run();
 //    sync_test_run();
-    async_run();
-
+//    async_run();
+    sem_run();
     memory_allocator_run();
 
     kvc::print_str("Uspeo\n");

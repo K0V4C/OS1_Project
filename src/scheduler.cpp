@@ -50,7 +50,7 @@ TCB *Scheduler::get() {
         instance.tail = nullptr;
 
     TCB* ret = return_node->value;
-    MemoryAllocator::free_blocks((void*)return_node);
+    delete return_node;
 
     return ret;
 }
