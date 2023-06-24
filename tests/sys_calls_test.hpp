@@ -11,6 +11,7 @@
 
 void sys_calls_run(){
 
+    kvc::print_str("\nSYS CALLS TESTS\n");
     void *mem_1, *mem_2, *mem_3, *mem_4, *mem_5, *mem_6;
 
     mem_1 = mem_alloc(1024);
@@ -24,6 +25,7 @@ void sys_calls_run(){
 
     mem_free(mem_1);
 
+    kvc::print_str("\nTest 1 done\n");
 
 }
 

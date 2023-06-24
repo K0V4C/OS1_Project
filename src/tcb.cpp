@@ -15,6 +15,7 @@ extern "C" void push_registers();
 extern "C" void pop_registers();
 
 TCB* TCB::running = 0;
+uint64 TCB::time_slice_counter = 0;
 
 TCB *TCB::create_thread(TCB::Body body) {
     /*C like way
@@ -38,7 +39,7 @@ TCB *TCB::create_thread(TCB::Body body) {
 
     return new_tcb;
      */
-    return new TCB(body);
+    return new TCB(body, TIME_SLICE);
 
 }
 
@@ -71,7 +72,9 @@ void TCB::operator delete(void *ptr) {
 
 
 
-TCB::TCB(TCB::Body body):body(body) {
+
+TCB::TCB(TCB::Body body, uint64 time_slice = DEFAULT_TIME_SLICE):
+    body(body), time_slice(time_slice) {
 
     stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(
             MemoryAllocator::size_in_blocks(

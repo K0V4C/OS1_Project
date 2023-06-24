@@ -17,6 +17,10 @@ private:
     Body body;
     uint64* stack;
     bool finished;
+    uint64 time_slice;
+
+    static uint64 const TIME_SLICE = DEFAULT_TIME_SLICE;
+    static  uint64 time_slice_counter;
 
     struct Context {
         uint64 ra;
@@ -25,7 +29,7 @@ private:
 
     Context context;
 
-    TCB(Body body);
+    TCB(Body body, uint64 time_slice);
 
 public:
 

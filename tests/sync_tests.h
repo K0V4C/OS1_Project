@@ -86,7 +86,7 @@ void worker_c() {
 
     TCB::yield();
 
-    int val = fib(34, "wc");
+    int val = fib(30, "wc");
     kvc::print_str("Fibonaci C is: ");
     kvc::print_int(val);
     kvc::new_line();
@@ -104,6 +104,8 @@ void worker_c() {
 }
 
 auto sync_test_run() -> void {
+
+    kvc::print_str("\nSYNC TESTS\n");
 
     TCB* threads[5];
 
