@@ -10,10 +10,6 @@
 #include "../h/scheduler.hpp"
 #include "../h/memory_allocator.hpp"
 
-// I dont know how to this without name mangling
-//extern "C" void push_registers();
-//extern "C" void pop_registers();
-
 TCB* TCB::running = 0;
 uint64 TCB::time_slice_counter = 0;
 
