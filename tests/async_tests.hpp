@@ -18,7 +18,7 @@ void worker_A() {
         kvc::print_int(i);
         kvc::new_line();
         for(uint64 j = 0; j < 30000; j ++){
-            for(uint64 k = 0; k < 30000; k++){
+            for(uint64 k = 0; k < 3000; k++){
                 // we waitin
             }
         }
@@ -35,7 +35,7 @@ void worker_B() {
         kvc::print_int(i);
         kvc::new_line();
         for(uint64 j = 0; j < 10000; j ++){
-            for(uint64 k = 0; k < 30000; k++) {
+            for(uint64 k = 0; k < 3000; k++) {
                 // we waitin
             }
         }
@@ -77,7 +77,7 @@ void worker_D() {
         kvc::print_str("D: i= ");
         kvc::print_int(i);
         kvc::new_line();
-        for(uint64 j = 0; j < 100000; j ++){
+        for(uint64 j = 0; j < 1000; j ++){
             for(uint64 k = 0; k < 30000; k++){
                 // we waitin
             }
@@ -104,7 +104,10 @@ auto async_run() -> void {
     threads[4] = TCB::create_thread(worker_D);
 
 
-    while(!threads[1]->isFinished() or !threads[2]->isFinished() or !threads[3]->isFinished() or !threads[4]->isFinished())
+    while(threads[1]->get_state() == TCB::State::NOT_FINISHED
+        or threads[2]->get_state() == TCB::State::NOT_FINISHED
+        or threads[3]->get_state() == TCB::State::NOT_FINISHED
+        or threads[4]->get_state() == TCB::State::NOT_FINISHED)
         TCB::yield();
 
     delete threads[1];

@@ -117,7 +117,9 @@ auto sync_test_run() -> void {
     threads[2] = TCB::create_thread(worker_b);
     threads[3] = TCB::create_thread(worker_c);
 
-    while(!threads[1]->isFinished() or !threads[3]->isFinished() or !threads[2]->isFinished())
+    while(threads[1]->get_state() == TCB::State::NOT_FINISHED
+        or threads[2]->get_state() == TCB::State::NOT_FINISHED
+        or threads[3]->get_state() == TCB::State::NOT_FINISHED)
         TCB::yield();
 
     delete threads[1];
@@ -135,7 +137,7 @@ auto sync_test_run() -> void {
     while(true) {
         int cnt = 0;
         for(int i = 0; i < 100; i++) {
-            if(threads2[i]->isFinished())
+            if(threads2[i]->get_state() == TCB::State::FINISHED)
                 cnt++;
         }
         if(cnt == 100)

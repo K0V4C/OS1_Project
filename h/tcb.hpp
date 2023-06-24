@@ -12,13 +12,17 @@
 class TCB {
 public:
     using Body = void (*)();
+    enum State{
+        NOT_FINISHED,
+        FINISHED,
+        BLOCKED,
+    };
 private:
 
     Body body;
     uint64* stack;
-    bool finished;
-    bool blocked;
     uint64 time_slice;
+    State state;
 
     struct Context {
         uint64 ra;
@@ -37,11 +41,12 @@ public:
     static TCB* running;
     static  uint64 time_slice_counter;
 
-    void setFinished(bool finished) {this->finished = finished;}
-    bool isFinished() const {return finished;}
-
-    void set_blocked(bool blocked) {this->blocked = blocked;}
-    bool is_blocked() const {return blocked;}
+    void set_state(State state) {
+        this->state = state;
+    }
+    State get_state() const {
+        return this->state;
+    }
 
     uint64 get_time_slice() {return time_slice; }
 

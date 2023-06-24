@@ -17,7 +17,11 @@ auto main() -> int {
 
     set_stvec();
 
+    // ovo vise ovako ne moze da se stestira
 //    sys_calls_run();
+
+
+
 //    sync_test_run();
 //    async_run();
     sem_run();

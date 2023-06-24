@@ -5,7 +5,6 @@
 #include "../h/kernel_sem.hpp"
 #include "../h/output.hpp"
 
-
 // Semaphore node
 
 void *KernelSemaphore::blocked_node::operator new(size_t size) {
@@ -49,7 +48,7 @@ void KernelSemaphore::block() {
     }
 
     //  has to be yield
-    TCB::running->set_blocked(true);
+    TCB::running->set_state(TCB::State::BLOCKED);
     TCB::yield();
 }
 
@@ -64,7 +63,7 @@ void KernelSemaphore::unblock() {
     if(blocked_queue_start == nullptr)
         blocked_queue_tail = nullptr;
 
-    scheduled_node->value->set_blocked(false);
+    scheduled_node->value->set_state(TCB::State::NOT_FINISHED);
     Scheduler::put(scheduled_node->value);
     delete scheduled_node;
 

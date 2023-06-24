@@ -52,7 +52,11 @@ void TCB::yield() {
 
 void TCB::dispatch() {
     TCB* old = TCB::running;
-    if(!old->isFinished() && !old->is_blocked())  Scheduler::put(old);
+
+    if(old != nullptr
+        && old->get_state() != State::FINISHED
+        && old->get_state() != State::BLOCKED)  Scheduler::put(old);
+
     TCB::running = Scheduler::get();
 
     TCB::context_switch(&old->context, &running->context);
@@ -72,7 +76,7 @@ void TCB::operator delete(void *ptr) {
 void TCB::thread_wrapper() {
     TCB::pop_spp_spie();
     running->body();
-    running->setFinished(true);
+    running->set_state(State::FINISHED);
     TCB::yield();
 }
 
@@ -91,8 +95,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice ):
             (uint64)&thread_wrapper, sp_start
     };
 
-    finished = false;
-    blocked = false;
+    state = State::NOT_FINISHED;
 
     if(body) Scheduler::put(this);
 
