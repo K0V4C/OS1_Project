@@ -41,11 +41,9 @@ public:
     static TCB* create_thread(Body body);
 
     void* operator new(size_t size);
+    void operator delete (void* ptr);
 
-    void free();
-//    void operator delete (void* ptr);
-
-
+    ~TCB();
 };
 
 #endif // TCB_HPP

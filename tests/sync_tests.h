@@ -30,7 +30,7 @@ void worker_a() {
 
     TCB::yield();
 
-    int val = fib(25, "wa");
+    int val = fib(20, "wa");
     kvc::print_str("Fibonaci A is: ");
     kvc::print_int(val);
     kvc::new_line();
@@ -86,7 +86,7 @@ void worker_c() {
 
     TCB::yield();
 
-    int val = fib(25, "wc");
+    int val = fib(34, "wc");
     kvc::print_str("Fibonaci C is: ");
     kvc::print_int(val);
     kvc::new_line();
@@ -120,13 +120,34 @@ auto sync_test_run() -> void {
     while(!threads[1]->isFinished() or !threads[3]->isFinished() or !threads[2]->isFinished())
         TCB::yield();
 
-    threads[1]->free();
-    threads[2]->free();
-    threads[3]->free();
-    MemoryAllocator::free_blocks(threads[1]);
-    MemoryAllocator::free_blocks(threads[2]);
-    MemoryAllocator::free_blocks(threads[3]);
+    delete threads[1];
+    delete threads[2];
+    delete threads[3];
 
+    kvc::print_str("\nTest 1 passed\n");
+
+    TCB* threads2[100];
+
+    for(int i = 0; i < 100; i++){
+        threads2[i] = TCB::create_thread(worker_a);
+    }
+
+    while(true) {
+        int cnt = 0;
+        for(int i = 0; i < 100; i++) {
+            if(threads2[i]->isFinished())
+                cnt++;
+        }
+        if(cnt == 100)
+            break;
+        TCB::yield();
+    }
+
+    for(int i = 0; i < 100; i++){
+        delete threads2[i];
+    }
+
+    kvc::print_str("\nTest 2 passed\n");
 }
 
 #endif //OS1_PROJECT_SYNC_TESTS_H
