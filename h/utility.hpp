@@ -9,6 +9,8 @@
 #include "../lib/console.h"
 #include "../lib/hw.h"
 
+// Inspired by videos
+
 namespace riscv {
 
     inline void mask_set_sstatus(uint64 mask){

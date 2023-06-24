@@ -42,9 +42,9 @@ void worker_a() {
         kvc::print_int(i);
         kvc::new_line();
     }
-
-    TCB::running->setFinished(true);
-    TCB::yield();
+//
+//    TCB::running->setFinished(true);
+//    TCB::yield();
 }
 
 void worker_b() {
@@ -70,9 +70,9 @@ void worker_b() {
         kvc::print_int(i);
         kvc::new_line();
     }
-
-    TCB::running->setFinished(true);
-    TCB::yield();
+//
+//    TCB::running->setFinished(true);
+//    TCB::yield();
 }
 
 void worker_c() {
@@ -98,9 +98,9 @@ void worker_c() {
         kvc::print_int(i);
         kvc::new_line();
     }
-
-    TCB::running->setFinished(true);
-    TCB::yield();
+//
+//    TCB::running->setFinished(true);
+//    TCB::yield();
 }
 
 auto sync_test_run() -> void {

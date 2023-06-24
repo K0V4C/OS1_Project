@@ -11,11 +11,17 @@
 #include "../h/memory_allocator.hpp"
 
 // I dont know how to this without name mangling
-extern "C" void push_registers();
-extern "C" void pop_registers();
+//extern "C" void push_registers();
+//extern "C" void pop_registers();
 
 TCB* TCB::running = 0;
 uint64 TCB::time_slice_counter = 0;
+
+void TCB::pop_spp_spie() {
+    asm volatile ("csrw sepc, ra");
+    asm volatile ("sret");
+}
+
 
 TCB *TCB::create_thread(TCB::Body body) {
     /*C like way
@@ -45,9 +51,7 @@ TCB *TCB::create_thread(TCB::Body body) {
 
 void TCB::yield() {
 
-    push_registers();
-    TCB::dispatch();
-    pop_registers();
+    asm volatile("ecall");
 }
 
 void TCB::dispatch() {
@@ -69,7 +73,12 @@ void TCB::operator delete(void *ptr) {
     MemoryAllocator::free_blocks(ptr);
 }
 
-
+void TCB::thread_wrapper() {
+    TCB::pop_spp_spie();
+    running->body();
+    running->setFinished(true);
+    TCB::yield();
+}
 
 
 
@@ -83,7 +92,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice = DEFAULT_TIME_SLICE):
 
     uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
     context = {
-            (uint64)body, sp_start
+            (uint64)&thread_wrapper, sp_start
     };
 
     finished = false;

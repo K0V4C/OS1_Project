@@ -8,6 +8,7 @@
 #include "../h/bit_masks.hpp"
 #include "../h/abi.hpp"
 #include "../lib/hw.h"
+#include "../h/tcb.hpp"
 
 #define sys_call_code args[0]
 
@@ -28,7 +29,7 @@ void print_status(uint64* arr) {
     kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
 
     uint64 volatile sepc = riscv::read_sepc();
-    kvc::print_uint64(sepc);kvc::print_str("  <-- SEPC\n");
+    kvc::print_void((void*)sepc);kvc::print_str("  <-- SEPC\n");
 
     uint64 volatile stval = riscv::read_stval();
     kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
@@ -38,6 +39,14 @@ void print_status(uint64* arr) {
 
 void panic(const char* msg) {
     kvc::print_str(msg);kvc::new_line();
+    uint64 volatile scause = riscv::read_scause();
+    kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
+
+    uint64 volatile sepc = riscv::read_sepc();
+    kvc::print_void((void*)sepc);kvc::print_str("  <-- SEPC\n");
+
+    uint64 volatile stval = riscv::read_stval();
+    kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
     volatile int stop = 0;
     while(true) {
         stop++;
@@ -53,9 +62,10 @@ extern "C" void handle_ecall_and_exception() {
     asm volatile("mv %[mem],  a2": [mem] "=r" (*(args+2)));
     asm volatile("mv %[mem],  a3": [mem] "=r" (*(args+3)));
     asm volatile("mv %[mem],  a4": [mem] "=r" (*(args+4)));
-    print_status(args);
+//    print_status(args);
 
     uint64 volatile scause = riscv::read_scause();
+    uint64 sepc, sstatus;
 
     switch (scause) {
             case TRAP_TYPE::illegal_instruction:
@@ -82,17 +92,15 @@ extern "C" void handle_ecall_and_exception() {
 
                 break;
             case TRAP_TYPE::system_ecall_interrupt:
-                if(sys_call_code == OP_CODES::c_allocate_memory) {
-                    uint64 ret = (uint64)ABI::mem_alloc(args[1]);
-                     set_return_value(ret);
-                    break;
-                }
 
-                if(sys_call_code == OP_CODES::c_free_memory) {
-                    uint64 ret = ABI::mem_free((void*)args[1]);
-                    set_return_value(ret);
-                    break;
-                }
+                sepc = riscv::read_sepc();
+                sstatus = riscv::read_sstatus();
+                TCB::time_slice_counter = 0;
+                TCB::dispatch();
+                riscv::write_sstatus(sstatus);
+                riscv::write_sepc(sepc);
+
+                break;
             default:
                 kvc::print_str("\n------>This should not happen\n");
                 print_status(args);
@@ -103,13 +111,32 @@ extern "C" void handle_ecall_and_exception() {
 }
 
 extern "C" void handle_third_lv_interrupt() {
-    riscv::mask_clear_sip(0x02);
-    riscv::write_sstatus(0x00);
-    kvc::print_str("handle_third_lv_interrupt\n");
+    // timer interrupt
+
+    // sip -> supervisor interrupt pending
+//    kvc::print_str("AAAAAA");
+    TCB::time_slice_counter++;
+    if(TCB::running->time_slice_counter >= TCB::running->get_time_slice()) {
+//        kvc::print_str("EEEEEEE");
+        uint64 sepc = riscv::read_sepc();
+        uint64  sstatus = riscv::read_sstatus();
+        TCB::time_slice_counter = 0;
+        TCB::dispatch();
+        riscv::write_sstatus(sstatus);
+        riscv::write_sepc(sepc);
+    }
+
+
+    riscv::mask_clear_sip(SIP::SIP_SSIP); // Write 0 to signal interrupt finished
+
+
+//    kvc::print_str("handle_third_lv_interrupt\n");
 }
 
 extern "C" void handle_hardware_interrupt() {
-    kvc::print_str("handle hardware interrupt\n");
+    // do this yourself
+    console_handler();
+//    kvc::print_str("handle hardware interrupt\n");
 }
 
 

@@ -17,11 +17,16 @@ enum OP_CODES{
     c_putc            = 0x42
 };
 
+enum SIP {
+    SIP_SSIP = (1 << 1),
+    SIP_STIP = (1 << 5),
+    SIP_SEIP = (1 << 9),
+};
 
 enum SStatus{
-    SSTATUS_SPIE= 0x020, // Last SIE
-    SSTATUS_SPP = 0x100, // Mode user kernel
-    SSTATUS_SIE = 0x001, // Enable / disable interrupts
+    SSTATUS_SIE = (1 << 1), // Enable / disable interrupts
+    SSTATUS_SPIE= (1 << 5), // Last SIE
+    SSTATUS_SPP = (1 << 8), // Mode user kernel
 
 };
 
