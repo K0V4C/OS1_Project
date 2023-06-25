@@ -113,9 +113,14 @@ extern "C" void handle_ecall_and_exception() {
             set_return_value(ret);
 
         } else if(sys_call_code == OP_CODES::c_thread_exit) {
-            // Only op code
-            TCB::running->set_state(TCB::State::FINISHED);
-            TCB::yield();
+            // Only op code]
+            if(TCB::running == nullptr) {
+                set_return_value(-1);
+            } else {
+                TCB::running->set_state(TCB::State::FINISHED);
+                TCB::yield();
+                set_return_value(1);
+            }
 
         } else if(sys_call_code == OP_CODES::c_thread_dispatch) {
             // Only op code
@@ -123,7 +128,9 @@ extern "C" void handle_ecall_and_exception() {
 
         } else if(sys_call_code == OP_CODES::c_thread_join) {
             //  handle args[1]
-
+            thread_t handle = (thread_t)args[1];
+            handle->add_blocked(handle);
+//            TCB::yield();
 
         } else if(sys_call_code == OP_CODES::c_sem_open) {
 

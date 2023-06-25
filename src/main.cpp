@@ -12,9 +12,8 @@ inline void set_stvec(){
 }
 
 void dummy_thread(void*) {
-    uint64 volatile dummy = 0;
     while(true) {
-//        dummy++;
+        //ovo je sus
         TCB::yield();
     }
 }
@@ -31,7 +30,7 @@ auto main() -> int {
     TCB* loop_thread = TCB::create_thread(dummy_thread);
 
     sys_calls_run1();
-
+//    sys_calls_run2();
 
 
 //    sync_test_run();

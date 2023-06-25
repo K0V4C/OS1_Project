@@ -59,6 +59,7 @@ void TCB::thread_wrapper() {
     TCB::pop_spp_spie();
     running->body(running->arg);
     running->set_state(State::FINISHED);
+    running->unblock();
     TCB::yield();
 }
 
@@ -76,16 +77,16 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
 
         state = State::NOT_FINISHED;
 
+        join_queue = KernelSemaphore::create_semaphore(0);
+
         if(body) Scheduler::put(this);
 }
 
 TCB::TCB(TCB::Body body, uint64 time_slice ):
     body(body), time_slice(time_slice) {
 
-    stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(
-            MemoryAllocator::size_in_blocks(
-                    DEFAULT_STACK_SIZE)
-                    ): nullptr;
+    stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
+                    DEFAULT_STACK_SIZE)): nullptr;
 
     uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
     context = {
@@ -95,12 +96,26 @@ TCB::TCB(TCB::Body body, uint64 time_slice ):
 
     state = State::NOT_FINISHED;
 
+    join_queue = KernelSemaphore::create_semaphore(0);
+
     if(body) Scheduler::put(this);
 
+}
+
+void TCB::unblock() {
+    while(join_queue->get_value() < 0)
+        join_queue->signal();
+}
+
+void TCB::add_blocked(TCB *tcb) {
+   // Add deadlock guard
+   if(tcb->get_state() != TCB::State::FINISHED)
+       join_queue->wait();
 }
 
 TCB::~TCB() {
     MemoryAllocator::free_blocks(stack);
 }
+
 
 

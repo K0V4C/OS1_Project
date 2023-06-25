@@ -56,7 +56,7 @@ void thread_dispatch() {
 
 void thread_join ( thread_t handle ) {
     asm volatile ("mv a0, %[handle]": : [handle] "r"  (handle));
-    set_and_ecall(OP_CODES::c_sem_open);
+    set_and_ecall(OP_CODES::c_thread_join);
 }
 
 int sem_open(

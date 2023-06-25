@@ -41,6 +41,7 @@ private:
     static uint64 const TIME_SLICE = DEFAULT_TIME_SLICE;
     static uint64  const SWITCH_CODE = 0xff;
 
+    KernelSemaphore* join_queue;
 
 public:
 
@@ -67,8 +68,8 @@ public:
     static void pop_spp_spie();
 
     // For thread join
-//    void unblock();
-//    void add_blocked(TCB* tcb);
+    void unblock();
+    void add_blocked(TCB* tcb);
 
     void* operator new(size_t size);
     void operator delete (void* ptr);

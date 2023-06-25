@@ -72,15 +72,9 @@ void KernelSemaphore::unblock() {
 }
 
 void KernelSemaphore::wait() {
-//    kvc::print_str("ULAZAK U WAIT: ");kvc::print_int(sem_value);kvc::new_line();
     if(--sem_value < 0 ) block();
-//    kvc::print_str("IZLAZAK IZ WAIT: ");kvc::print_int(sem_value);kvc::new_line();
-    //    kvc::print_int(sem_value);kvc::new_line();
 }
 
 void KernelSemaphore::signal() {
-//    kvc::print_str("ULAZAK U SIGNAL: ");kvc::print_int(sem_value);kvc::new_line();
     if(++sem_value <= 0) unblock();
-//    kvc::print_str("IZLAZAL IZ SIGNAL: ");kvc::print_int(sem_value);kvc::new_line();
-//    kvc::print_int(sem_value);kvc::new_line();
 }
