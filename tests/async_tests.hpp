@@ -54,7 +54,7 @@ void worker_C() {
 
     TCB::yield();
 
-    int val = fib(30, "wc");
+    int val = fib(20, "wc");
     kvc::print_str("Fibonaci C is: ");
     kvc::print_int(val);
     kvc::new_line();

@@ -46,7 +46,7 @@ TCB *TCB::create_thread(TCB::Body body) {
 }
 
 void TCB::yield() {
-
+    asm volatile ("mv a0, %[code]": : [code] "r"  (TCB::SWITCH_CODE));
     asm volatile("ecall");
 }
 

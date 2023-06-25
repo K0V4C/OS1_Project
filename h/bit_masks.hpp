@@ -14,7 +14,8 @@ enum OP_CODES{
     c_sem_signal      = 0x24,
     c_time_sleep      = 0x31,
     c_getc            = 0x41,
-    c_putc            = 0x42
+    c_putc            = 0x42,
+    sync_switch       = 0xff,
 };
 
 enum SIP {

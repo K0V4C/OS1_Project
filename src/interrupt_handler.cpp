@@ -69,54 +69,133 @@ extern "C" void handle_ecall_and_exception() {
     // case is just stupid
     uint64 sepc, sstatus;
 
-    switch (scause) {
-            case TRAP_TYPE::illegal_instruction:
-                panic("Illegal instruction");
-                break;
-            case TRAP_TYPE::illegal_read_address:
-                panic("Illegal read address");
-                break;
-            case TRAP_TYPE::illegal_write_address:
-                panic("Illegal write address");
-                break;
-            case TRAP_TYPE::user_ecall_interrupt:
-                if(sys_call_code == OP_CODES::c_allocate_memory) {
-                    uint64 ret = (uint64)ABI::mem_alloc(args[1]);
-                     set_return_value(ret);
-                    break;
-                }
 
-                if(sys_call_code == OP_CODES::c_free_memory) {
-                    uint64 ret = ABI::mem_free((void*)args[1]);
-                    set_return_value(ret);
-                    break;
-                }
+    if(scause == TRAP_TYPE::illegal_instruction) {
+        panic("Illegal instruction");
 
-                break;
-            case TRAP_TYPE::system_ecall_interrupt:
+    } else if (scause == TRAP_TYPE::illegal_read_address) {
+        panic("Illegal read address");
 
-                sepc = riscv::read_sepc();
-                sstatus = riscv::read_sstatus();
-                TCB::dispatch();
-                riscv::write_sstatus(sstatus);
-                riscv::write_sepc(sepc);
+    } else if (scause == TRAP_TYPE::illegal_write_address) {
+        panic("Illegal write address");
 
-                break;
-            default:
-                kvc::print_str("\n------>This should not happen\n");
-                print_status(args);
+    } else if ( scause == TRAP_TYPE::user_ecall_interrupt || scause == TRAP_TYPE::system_ecall_interrupt) {
 
-                panic("Unknown condition");
+        if(sys_call_code == OP_CODES::c_allocate_memory) {
+            uint64 ret = (uint64)ABI::mem_alloc(args[1]);
+            set_return_value(ret);
+
+        } else if(sys_call_code == OP_CODES::c_free_memory) {
+            uint64 ret = ABI::mem_free((void*)args[1]);
+            set_return_value(ret);
+
+        } else if(sys_call_code == OP_CODES::c_create_thread) {
+
+        } else if(sys_call_code == OP_CODES::c_thread_exit) {
+
+        } else if(sys_call_code == OP_CODES::c_thread_dispatch) {
+
+        } else if(sys_call_code == OP_CODES::c_thread_join) {
+
+        } else if(sys_call_code == OP_CODES::c_sem_open) {
+
+        } else if(sys_call_code == OP_CODES::c_sem_close) {
+
+        }else if(sys_call_code == OP_CODES::c_sem_wait) {
+
+        } else if(sys_call_code == OP_CODES::c_sem_signal) {
+
+        }else if(sys_call_code == OP_CODES::c_time_sleep) {
+
+        }else if(sys_call_code == OP_CODES::c_putc) {
+
+        }else if(sys_call_code == OP_CODES::c_getc) {
+
+        } else if (sys_call_code == OP_CODES::sync_switch) {
+            sepc = riscv::read_sepc() + 4;
+            sstatus = riscv::read_sstatus();
+            TCB::dispatch();
+            riscv::write_sstatus(sstatus);
+            riscv::write_sepc(sepc);
+        }
+
+
+    } else {
+        kvc::print_str("\n------>This should not happen\n");
+        print_status(args);
+        panic("Unknown condition");
     }
+
+//    switch (scause) {
+//            case TRAP_TYPE::illegal_instruction:
+//                panic("Illegal instruction");
+//                break;
+//            case TRAP_TYPE::illegal_read_address:
+//                panic("Illegal read address");
+//                break;
+//            case TRAP_TYPE::illegal_write_address:
+//                panic("Illegal write address");
+//                break;
+//            case TRAP_TYPE::user_ecall_interrupt:
+//
+//                if(sys_call_code == OP_CODES::c_allocate_memory) {
+//                    uint64 ret = (uint64)ABI::mem_alloc(args[1]);
+//                     set_return_value(ret);
+//                    break;
+//                } else if(sys_call_code == OP_CODES::c_free_memory) {
+//                    uint64 ret = ABI::mem_free((void*)args[1]);
+//                    set_return_value(ret);
+//                    break;
+//                } else if(sys_call_code == OP_CODES::c_create_thread) {
+//
+//                } else if(sys_call_code == OP_CODES::c_thread_exit) {
+//
+//                } else if(sys_call_code == OP_CODES::c_thread_dispatch) {
+//
+//                } else if(sys_call_code == OP_CODES::c_thread_join) {
+//
+//                } else if(sys_call_code == OP_CODES::c_sem_open) {
+//
+//                } else if(sys_call_code == OP_CODES::c_sem_close) {
+//
+//                }else if(sys_call_code == OP_CODES::c_sem_wait) {
+//
+//                } else if(sys_call_code == OP_CODES::c_sem_signal) {
+//
+//                }else if(sys_call_code == OP_CODES::c_time_sleep) {
+//
+//                }else if(sys_call_code == OP_CODES::c_putc) {
+//
+//                }else if(sys_call_code == OP_CODES::c_getc) {
+//
+//                } else if(sys_call_code == OP_CODES::sync_switch) {
+//
+//                }
+//                break;
+//            case TRAP_TYPE::system_ecall_interrupt:
+//
+//                sepc = riscv::read_sepc() + 4;
+//                sstatus = riscv::read_sstatus();
+//                TCB::dispatch();
+//                riscv::write_sstatus(sstatus);
+//                riscv::write_sepc(sepc);
+//
+//                break;
+//            default:
+//                kvc::print_str("\n------>This should not happen\n");
+//                print_status(args);
+//
+//                panic("Unknown condition");
+//    }
 }
 
 extern "C" void handle_third_lv_interrupt() {
     // timer interrupt
 
     // sip -> supervisor interrupt pending
-
     TCB::time_slice_counter++;
     if(TCB::running->time_slice_counter >= TCB::running->get_time_slice()) {
+//        kvc::print_str("Timer\n");
         uint64 sepc = riscv::read_sepc();
         uint64  sstatus = riscv::read_sstatus();
         TCB::time_slice_counter = 0;

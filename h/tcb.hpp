@@ -35,6 +35,7 @@ private:
 
     static void thread_wrapper();
     static uint64 const TIME_SLICE = DEFAULT_TIME_SLICE;
+    static uint64  const SWITCH_CODE = 0xff;
 
 public:
 

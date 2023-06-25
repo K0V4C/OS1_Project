@@ -30,25 +30,66 @@ int mem_free (void* adr) {
 int thread_create (
     thread_t * handle, // Sakriven pokazivac
     void(*start_routine)(void*),
-    void* arg
-);
+    void* arg) {
 
-int thread_exit ();
+    void* stack = mem_alloc(DEFAULT_STACK_SIZE);
+    asm volatile ("mv a0, %[stack]": : [stack] "r"  (stack));
+    asm volatile ("mv a1, %[start]": : [start] "r"  (start_routine));
+    asm volatile ("mv a2, %[function]": : [function] "r"  (handle));
+    asm volatile ("mv a3, %[args]": : [args] "r"  (handle));
+    set_and_ecall(OP_CODES::c_create_thread);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
 
-void thread_dispatch();
+int thread_exit () {
+    set_and_ecall(OP_CODES::c_thread_exit);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
+
+void thread_dispatch() {
+    set_and_ecall(OP_CODES::c_thread_dispatch);
+}
 
 void thread_join ( thread_t handle );
 
 int sem_open(
         sem_t* handle,
-        unsigned int
-        );
+        unsigned init) {
+    asm volatile ("mv a0, %[handle]": : [handle] "r"  (handle));
+    asm volatile ("mv a1, %[init]": : [init] "r"  (init));
+    set_and_ecall(OP_CODES::c_sem_open);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
 
-int sem_close(sem_t handle);
+int sem_close(sem_t handle) {
+    asm volatile ("mv a0, %[handle]": : [handle] "r"  (handle));
+    set_and_ecall(OP_CODES::c_sem_close);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
 
-int sem_wait(sem_t id);
+int sem_wait(sem_t id) {
+    asm volatile ("mv a0, %[id]": : [id] "r"  (id));
+    set_and_ecall(OP_CODES::c_sem_wait);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
 
-int sem_signal(sem_t id);
+int sem_signal(sem_t id) {
+    asm volatile ("mv a0, %[id]": : [id] "r"  (id));
+    set_and_ecall(OP_CODES::c_sem_signal);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
 
 int time_sleep(time_t);
 

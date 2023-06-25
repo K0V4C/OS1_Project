@@ -17,8 +17,7 @@ auto main() -> int {
 
     set_stvec();
 
-    // ovo vise ovako ne moze da se stestira
-//    sys_calls_run();
+
 
 
 

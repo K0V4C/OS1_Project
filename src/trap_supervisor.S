@@ -16,6 +16,14 @@ trap_supervisor:
     j hardware_interrupt
 
 ecall_and_exception:
+
+    # inc sepc by 4
+    # csrw sscratch, t0
+    # csrr t0, sepc
+    # addi t0, t0, 4
+    # csrw sepc, t0
+    # csrr t0, sstatus
+
     addi sp, sp, -256
     # save regular regs
     .irp index 1,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
@@ -24,18 +32,12 @@ ecall_and_exception:
 
     call handle_ecall_and_exception
 
+    # note to self what if i lose async and gain sync
     # 10 does not exist -> a0
     .irp index 1,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
     ld   x\index, \index*8(sp)
     .endr
     addi sp, sp, 256
-
-    # inc sepc by 4
-    csrw sscratch, t0
-    csrr t0, sepc
-    addi t0, t0, 4
-    csrw sepc, t0
-    csrr t0, sstatus
 
     sret
 
