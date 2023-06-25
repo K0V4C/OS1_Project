@@ -34,9 +34,9 @@ int thread_create (
 
     void* stack = mem_alloc(DEFAULT_STACK_SIZE);
     asm volatile ("mv a0, %[stack]": : [stack] "r"  (stack));
-    asm volatile ("mv a1, %[start]": : [start] "r"  (start_routine));
-    asm volatile ("mv a2, %[function]": : [function] "r"  (handle));
-    asm volatile ("mv a3, %[args]": : [args] "r"  (handle));
+    asm volatile ("mv a1, %[handle]": : [handle] "r"  (handle));
+    asm volatile ("mv a2, %[function]": : [function] "r"  (start_routine));
+    asm volatile ("mv a3, %[args]": : [args] "r"  (arg));
     set_and_ecall(OP_CODES::c_create_thread);
     int volatile ret;
     SET_RET(ret);
@@ -54,7 +54,10 @@ void thread_dispatch() {
     set_and_ecall(OP_CODES::c_thread_dispatch);
 }
 
-void thread_join ( thread_t handle );
+void thread_join ( thread_t handle ) {
+    asm volatile ("mv a0, %[handle]": : [handle] "r"  (handle));
+    set_and_ecall(OP_CODES::c_sem_open);
+}
 
 int sem_open(
         sem_t* handle,

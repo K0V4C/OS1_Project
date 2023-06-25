@@ -20,29 +20,11 @@ void TCB::pop_spp_spie() {
 
 
 TCB *TCB::create_thread(TCB::Body body) {
-    /*C like way
-    TCB* new_tcb = (TCB*) MemoryAllocator::allocate_blocks(
-            MemoryAllocator::size_in_blocks(sizeof (TCB))
-            );
-
-    if (!new_tcb) return nullptr;
-
-    new_tcb->body = body;
-    new_tcb->stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(sizeof(uint64)* DEFAULT_STACK_SIZE)) : nullptr;
-
-    uint64 sp_start = new_tcb->stack != nullptr ? (uint64) &new_tcb->stack[DEFAULT_STACK_SIZE] : 0;
-    new_tcb->context = {
-            (uint64)body, sp_start
-    };
-
-    new_tcb->finished = false;
-
-    if(body) Scheduler::put(new_tcb);
-
-    return new_tcb;
-     */
     return new TCB(body, TIME_SLICE);
+}
 
+TCB *TCB::create_thread(TCB::Body body, void* stack, void* arg) {
+    return new TCB(body, TIME_SLICE, stack, arg);
 }
 
 void TCB::yield() {
@@ -75,12 +57,27 @@ void TCB::operator delete(void *ptr) {
 
 void TCB::thread_wrapper() {
     TCB::pop_spp_spie();
-    running->body();
+    running->body(running->arg);
     running->set_state(State::FINISHED);
     TCB::yield();
 }
 
 
+TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
+    body(body), time_slice(time_slice), arg(arg) {
+
+        this->stack =(uint64*)stack;
+        uint64 sp_start = stack != nullptr ? (uint64) &this->stack[DEFAULT_STACK_SIZE] : 0;
+
+        context = {
+                (uint64)&thread_wrapper,
+                sp_start
+        };
+
+        state = State::NOT_FINISHED;
+
+        if(body) Scheduler::put(this);
+}
 
 TCB::TCB(TCB::Body body, uint64 time_slice ):
     body(body), time_slice(time_slice) {
@@ -92,7 +89,8 @@ TCB::TCB(TCB::Body body, uint64 time_slice ):
 
     uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
     context = {
-            (uint64)&thread_wrapper, sp_start
+            (uint64)&thread_wrapper,
+            sp_start
     };
 
     state = State::NOT_FINISHED;
@@ -104,3 +102,5 @@ TCB::TCB(TCB::Body body, uint64 time_slice ):
 TCB::~TCB() {
     MemoryAllocator::free_blocks(stack);
 }
+
+

@@ -6,7 +6,8 @@
 #define KERNEL_SEMAPHORE_HPP
 
 #include "../lib/hw.h"
-#include "../h/scheduler.hpp"
+class TCB;
+
 
 // Page 273 from Operating Systems 1 by Dragan Milicev Book
 

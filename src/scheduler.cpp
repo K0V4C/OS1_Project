@@ -5,6 +5,7 @@
 #include "../h/scheduler.hpp"
 #include "../h/memory_allocator.hpp"
 #include "../h/output.hpp"
+#include "../h/tcb.hpp"
 
 Scheduler &Scheduler::get_instance() {
     static Scheduler instance;

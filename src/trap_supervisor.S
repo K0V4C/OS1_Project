@@ -18,11 +18,11 @@ trap_supervisor:
 ecall_and_exception:
 
     # inc sepc by 4
-    # csrw sscratch, t0
-    # csrr t0, sepc
-    # addi t0, t0, 4
-    # csrw sepc, t0
-    # csrr t0, sstatus
+    csrw sscratch, t0
+    csrr t0, sepc
+    addi t0, t0, 4
+    csrw sepc, t0
+    csrr t0, sstatus
 
     addi sp, sp, -256
     # save regular regs

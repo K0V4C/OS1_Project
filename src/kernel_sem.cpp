@@ -4,6 +4,8 @@
 
 #include "../h/kernel_sem.hpp"
 #include "../h/output.hpp"
+#include "../h/scheduler.hpp"
+#include "../h/tcb.hpp"
 
 // Semaphore node
 

@@ -14,8 +14,8 @@ extern void* mem_alloc(uint64 size_in_bytes);
 
 extern int mem_free(void* adr);
 
-class _thread;
-typedef _thread* thread_t;
+class TCB;
+typedef TCB* thread_t;
 
 extern int thread_create (
         thread_t * handle, // Sakriven pokazivac
@@ -29,8 +29,8 @@ extern void thread_dispatch();
 
 extern void thread_join ( thread_t handle );
 
-class _sem;
-typedef _sem* sem_t;
+class KernelSemaphore;
+typedef KernelSemaphore* sem_t;
 
 extern int sem_open(
         sem_t* handle,

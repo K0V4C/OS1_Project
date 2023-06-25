@@ -5,7 +5,7 @@
 #ifndef SCHEDULER_HPP
 #define SCHEDULER_HPP
 
-#include "tcb.hpp"
+class TCB;
 #include "memory_allocator.hpp"
 
 class Scheduler {
