@@ -147,7 +147,9 @@ extern "C" void handle_ecall_and_exception() {
         }else if(sys_call_code == OP_CODES::c_getc) {
 
         } else if (sys_call_code == OP_CODES::sync_switch) {
-            sepc = riscv::read_sepc() + 4;
+            kvc::print_str("eeeeeeeee");
+
+            sepc = riscv::read_sepc();
             sstatus = riscv::read_sstatus();
             TCB::dispatch();
             riscv::write_sstatus(sstatus);

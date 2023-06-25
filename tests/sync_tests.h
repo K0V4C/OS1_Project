@@ -19,7 +19,7 @@ int fib(int n, const char* a) {
     return fib(n-1, a) + fib(n-2, a);
 }
 
-void worker_a() {
+void worker_a(void* a) {
 
     kvc::print_str("Worker staring");
     for(int i = 0; i < 3; i++) {
@@ -47,7 +47,7 @@ void worker_a() {
 //    TCB::yield();
 }
 
-void worker_b() {
+void worker_b(void* a) {
 
     kvc::print_str("Worker staring");
     for(int i = 0; i < 3; i++) {
@@ -75,7 +75,7 @@ void worker_b() {
 //    TCB::yield();
 }
 
-void worker_c() {
+void worker_c(void* a) {
 
     kvc::print_str("\nWorker staring\n");
     for(int i = 0; i < 3; i++) {

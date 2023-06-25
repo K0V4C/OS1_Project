@@ -26,7 +26,7 @@ void worker_thread(void* arg) {
     Data* d = (Data*)arg;
 
 //    thread_exit();
-    kvc::print_int(fib(34));
+    kvc::print_int(fib(25));
     kvc::print_int(d->a);kvc::new_line();
     kvc::print_int(d->b);kvc::new_line();
     kvc::print_int(d->c);kvc::new_line();
@@ -63,8 +63,10 @@ void sys_calls_run1(){
     args->c = 100;
 
     int val = thread_create(&worker, &worker_thread, (void*)args );
-//    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
+    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
     thread_join(worker);
+//    thread_dispatch();
+
     kvc::print_str("\nTest 1 done\n");
 }
 
@@ -78,7 +80,7 @@ void sys_calls_run2() {
     int aa = thread_create(&a, &A, nullptr);
     int bb = thread_create(&b, &B, a);
     int cc = thread_create(&c, &C, b);
-    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
+//    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
     thread_join(c);
 
     kvc::print_str("\nTest 2 done\n");

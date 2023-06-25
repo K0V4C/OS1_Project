@@ -10,7 +10,7 @@
 #include "../h/utility.hpp"
 #include "../h/memory_allocator.hpp"
 #include "../h/bit_masks.hpp"
-void worker_A() {
+void worker_A(void* a) {
     kvc::print_str("\nA start\n");
 
     for(uint64 i = 0; i < 10; i++ ){
@@ -27,7 +27,7 @@ void worker_A() {
     kvc::print_str("\nA end\n");
 }
 
-void worker_B() {
+void worker_B(void* a) {
     kvc::print_str("\nB start\n");
 
     for(uint64 i = 0; i < 10; i++ ){
@@ -44,7 +44,7 @@ void worker_B() {
     kvc::print_str("\nB end\n");
 }
 
-void worker_C() {
+void worker_C(void* a) {
     kvc::print_str("\nWorker staring\n");
     for(int i = 0; i < 3; i++) {
         kvc::print_str("C = ");
@@ -71,7 +71,7 @@ void worker_C() {
     kvc::print_str("\nC end\n");
 }
 
-void worker_D() {
+void worker_D(void* a) {
     kvc::print_str("\nD start\n");
     for(uint64 i = 0; i < 10; i++ ){
         kvc::print_str("D: i= ");
@@ -92,9 +92,6 @@ auto async_run() -> void {
     kvc::print_str("\n------------- Startin async tests -------------\n");
 
     TCB* threads[5];
-
-    threads[0] = TCB::create_thread(nullptr);
-    TCB::running = threads[0];
 
     riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
 

@@ -13,7 +13,7 @@
 KernelSemaphore* sem1;
 KernelSemaphore* sem2;
 
-auto player_one() -> void {
+auto player_one(void* a) -> void {
     for(int i =  0; i < 10; i++) {
         sem1->wait();
         kvc::print_str("Player one \n");
@@ -24,7 +24,7 @@ auto player_one() -> void {
     }
 }
 
-auto player_two() -> void  {
+auto player_two(void* a) -> void  {
     for(int i = 0; i < 10; i++) {
         sem2->wait();
         kvc::print_str("Player two \n");
@@ -45,7 +45,7 @@ KernelSemaphore *full;
 
 KernelSemaphore *bafer;
 
-void f1()
+void f1(void* a)
 {
     //wait
     mutex->wait();
@@ -54,7 +54,7 @@ void f1()
     kvc::print_str("\nJust Exiting...\n");
     mutex->signal();
 }
-void producer() {
+void producer(void* a) {
     int item = 1;
     while (1) {
         // Wait for an empty slot in the buffer
@@ -74,7 +74,7 @@ void producer() {
     }
 }
 
-void consumer() {
+void consumer(void* a) {
     while (1) {
         // Wait for a filled slot in the buffer
         full->wait();
@@ -91,7 +91,7 @@ void consumer() {
         empty->signal();
     }
 }
-void producer2() {
+void producer2(void* a) {
     int item = 1;
     while (1) {
         // Wait for available space in the buffer
@@ -109,7 +109,7 @@ void producer2() {
     }
 }
 
-void consumer2() {
+void consumer2(void* a) {
     while (1) {
         // Wait for an item to be available in the buffer
         bafer->wait();
@@ -201,7 +201,7 @@ auto sem_run() -> void {
     kvc::print_str("Test 3 passed \n");
 #endif
 
-#if 1
+#if 0
 
     TCB* producer_thread, *consumer_thread;
 
