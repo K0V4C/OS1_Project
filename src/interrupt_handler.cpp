@@ -70,7 +70,7 @@ extern "C" void handle_ecall_and_exception() {
     uint64 volatile scause = riscv::read_scause();
 
     // case is just stupid
-    uint64 sepc, sstatus;
+    uint64 volatile sepc, sstatus;
 
 
     if(scause == TRAP_TYPE::illegal_instruction) {
@@ -147,9 +147,9 @@ extern "C" void handle_ecall_and_exception() {
         }else if(sys_call_code == OP_CODES::c_getc) {
 
         } else if (sys_call_code == OP_CODES::sync_switch) {
-            kvc::print_str("eeeeeeeee");
+//            kvc::print_str("eeeeeeeee");
 
-            sepc = riscv::read_sepc();
+            sepc = riscv::read_sepc() + 4;
             sstatus = riscv::read_sstatus();
             TCB::dispatch();
             riscv::write_sstatus(sstatus);

@@ -13,8 +13,8 @@ inline void set_stvec(){
 
 void dummy_thread(void*) {
     while(true) {
-        //ovo je sus
-        kvc::print_str("aaa");
+        // ovo je sus
+//        kvc::print_str("aaa");
         TCB::yield();
     }
 }
