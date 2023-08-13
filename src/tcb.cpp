@@ -18,7 +18,6 @@ void TCB::pop_spp_spie() {
     asm volatile ("sret");
 }
 
-
 TCB *TCB::create_thread(TCB::Body body) {
     return new TCB(body, TIME_SLICE);
 }
