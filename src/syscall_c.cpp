@@ -1,4 +1,4 @@
-#include "../h/syscall_c.hpp"
+#include "../h/syscall_c.h"
 #include "../h/bit_masks.hpp"
 
 inline void set_and_ecall(uint64 code) {

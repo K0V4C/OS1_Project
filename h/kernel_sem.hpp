@@ -8,7 +8,6 @@
 #include "../lib/hw.h"
 class TCB;
 
-
 // Page 273 from Operating Systems 1 by Dragan Milicev Book
 
 class KernelSemaphore {

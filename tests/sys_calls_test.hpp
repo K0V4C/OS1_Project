@@ -6,7 +6,7 @@
 #define OS1_PROJECT_SYS_CALLS_TEST_H
 
 #include "../h/utility.hpp"
-#include "../h/syscall_c.hpp"
+#include "../h/syscall_c.h"
 #include "../h/output.hpp"
 #include "../h/bit_masks.hpp"
 

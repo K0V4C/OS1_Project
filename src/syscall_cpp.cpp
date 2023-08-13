@@ -3,7 +3,7 @@
 //
 #ifndef _syscall_cpp
 #define _syscall_cpp
-#include "../h/syscall_c.hpp"
+#include "../h/syscall_c.h"
 
 void* operator new (size_t obj) {
     return mem_alloc(obj);

@@ -18,6 +18,7 @@ void TCB::pop_spp_spie() {
     asm volatile ("sret");
 }
 
+// Should be removed and made into one constructor
 TCB *TCB::create_thread(TCB::Body body) {
     return new TCB(body, TIME_SLICE);
 }
@@ -81,6 +82,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
         if(body) Scheduler::put(this);
 }
 
+// old
 TCB::TCB(TCB::Body body, uint64 time_slice ):
     body(body), time_slice(time_slice) {
 
