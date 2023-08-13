@@ -72,7 +72,6 @@ extern "C" void handle_ecall_and_exception() {
     // case is just stupid
     uint64 volatile sepc, sstatus;
 
-
     if(scause == TRAP_TYPE::illegal_instruction) {
         panic("Illegal instruction");
 
@@ -83,9 +82,7 @@ extern "C" void handle_ecall_and_exception() {
         panic("Illegal write address");
 
     } else if ( scause == TRAP_TYPE::user_ecall_interrupt || scause == TRAP_TYPE::system_ecall_interrupt) {
-
         // Figure out the types
-
         if(sys_call_code == OP_CODES::c_allocate_memory) {
             // memory size args[1]
             uint64 ret = (uint64) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(args[1]));
@@ -113,7 +110,7 @@ extern "C" void handle_ecall_and_exception() {
             set_return_value(ret);
 
         } else if(sys_call_code == OP_CODES::c_thread_exit) {
-            // Only op code]
+            // Only op code
             if(TCB::running == nullptr) {
                 set_return_value(-1);
             } else {
@@ -130,6 +127,7 @@ extern "C" void handle_ecall_and_exception() {
             //  handle args[1]
             thread_t handle = (thread_t)args[1];
             handle->add_blocked(handle);
+            // Edit to make it work
 //            TCB::yield();
 
         } else if(sys_call_code == OP_CODES::c_sem_open) {
@@ -148,12 +146,19 @@ extern "C" void handle_ecall_and_exception() {
 
         } else if (sys_call_code == OP_CODES::sync_switch) {
 //            kvc::print_str("eeeeeeeee");
-
             sepc = riscv::read_sepc() + 4;
             sstatus = riscv::read_sstatus();
             TCB::dispatch();
             riscv::write_sstatus(sstatus);
             riscv::write_sepc(sepc);
+
+        } else if (sys_call_code == OP_CODES::mode_switch) {
+            //change to user mode
+
+            sstatus =  riscv::read_sstatus();
+            sstatus = sstatus & (~SStatus::SSTATUS_SPP);
+            riscv::write_sstatus(sstatus);
+
         }
 
 

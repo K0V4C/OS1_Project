@@ -5,7 +5,7 @@ kernel.asm
 .gdbinit
 .vscode
 *.s
-public_tests
+test
 
 
 

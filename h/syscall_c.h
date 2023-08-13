@@ -52,5 +52,7 @@ char getc();
 
 void putc(char);
 
+void change_privilege();
+
 
 #endif //SYS_CALLS_H

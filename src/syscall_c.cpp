@@ -99,3 +99,7 @@ int time_sleep(time_t);
 char getc();
 
 void putc(char);
+
+void change_privilege() {
+    set_and_ecall(OP_CODES::mode_switch);
+}
