@@ -21,8 +21,18 @@ Thread::~Thread() {
     // Sta ovde treba?
 }
 
+void Thread::wrapper(void *arg) {
+    if(arg)((Thread*)arg)->run();
+}
+
 int Thread::start() {
-    return thread_create(&myHandle, body, arg);
+    // todo protection against multiple starts
+
+    if(body == nullptr ){
+        return thread_create(&myHandle, Thread::wrapper, this);
+    } else {
+        return thread_create(&myHandle, body, arg);
+    }
 }
 
 void Thread::join() {

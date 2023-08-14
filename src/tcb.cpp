@@ -9,6 +9,7 @@
 #include "../h/output.hpp"
 #include "../h/scheduler.hpp"
 #include "../h/memory_allocator.hpp"
+#include "../h/syscall_c.h"
 
 TCB* TCB::running = 0;
 uint64 TCB::time_slice_counter = 0;
@@ -60,7 +61,7 @@ void TCB::thread_wrapper() {
     running->body(running->arg);
     running->set_state(State::FINISHED);
     running->unblock();
-    TCB::yield();
+    thread_exit();
 }
 
 
