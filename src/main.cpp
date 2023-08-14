@@ -33,7 +33,7 @@ auto main() -> int {
     TCB::running = main_thread;
     TCB* loop_thread = TCB::create_thread(dummy_thread);
 
-//    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
+    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
     change_privilege();
     userMain();
 
