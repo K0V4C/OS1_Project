@@ -6,7 +6,7 @@
 
 #include "../h/syscall_c.h"
 #include "../h/syscall_cpp.hpp"
-
+#include "../lib/console.h"
 
 void* operator new (size_t obj) {
     return mem_alloc(obj);
@@ -15,7 +15,7 @@ void operator delete (void* ptr) {
     mem_free(ptr);
 }
 
-Thread::Thread(void (*body)(void *), void *arg) : body(body), arg(arg){}
+Thread::Thread(void (*body)(void *), void *arg) : body(body), arg(arg), myHandle(nullptr){}
 
 Thread::~Thread() {
     // Sta ovde treba?
@@ -26,7 +26,9 @@ void Thread::wrapper(void *arg) {
 }
 
 int Thread::start() {
-    // todo protection against multiple starts
+
+    if(myHandle == 0)
+        return -1;
 
     if(body == nullptr ){
         return thread_create(&myHandle, Thread::wrapper, this);
@@ -66,5 +68,13 @@ int Semaphore::signal() {
     return sem_signal(myHandle);
 }
 
-#endif
+char Console::getc() {
+    // TODO
+    return 0;
+}
 
+void Console::putc(char a) {
+    // TODO
+}
+
+#endif

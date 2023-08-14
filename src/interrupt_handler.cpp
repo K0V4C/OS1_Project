@@ -229,11 +229,15 @@ extern "C" void handle_ecall_and_exception() {
     }
 
     else if(sys_call_code == OP_CODES::c_putc) {
-
+        // TODO TEMP
+        // char args[1]
+        __putc((char)args[1]);
     }
 
     else if(sys_call_code == OP_CODES::c_getc) {
-
+        // TODO TEMP
+        char ret = __getc();
+        set_return_value(ret);
     }
 
     else if (sys_call_code == OP_CODES::sync_switch) {

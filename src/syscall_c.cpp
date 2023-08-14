@@ -1,5 +1,6 @@
 #include "../h/syscall_c.h"
 #include "../h/bit_masks.hpp"
+#include "../lib/console.h"
 
 inline void set_and_ecall(uint64 code) {
     asm volatile("mv a4, a3");
@@ -96,10 +97,20 @@ int sem_signal(sem_t id) {
 
 int time_sleep(time_t);
 
-char getc();
+char getc() {
+    set_and_ecall(OP_CODES::c_getc);
+    int volatile ret;
+    SET_RET(ret);
+    return (char)ret;
+}
 
-void putc(char);
+// TODO NOT DONE
+void putc(char a) {
+    asm volatile ("mv a0, %[a]": : [a] "r"  (a));
+    set_and_ecall(OP_CODES::c_putc);
+}
 
+// TODO NOT DONE
 void change_privilege() {
     set_and_ecall(OP_CODES::mode_switch);
 }
