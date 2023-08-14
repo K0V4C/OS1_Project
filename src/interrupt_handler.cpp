@@ -17,7 +17,7 @@ typedef TCB* thread_t;
 typedef KernelSemaphore* sem_t;
 
 inline void set_return_value(uint64 ret) {
-    asm volatile ("mv a0, %[ret]": : [ret] "r"(ret));
+    asm volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
 }
 
 void print_status(uint64* arr) {
@@ -116,11 +116,13 @@ extern "C" void handle_ecall_and_exception() {
                 set_return_value(-1);
             } else {
                 TCB::running->set_state(TCB::State::FINISHED);
+                //todo extract into function
                 sepc = riscv::read_sepc() + 4;
                 sstatus = riscv::read_sstatus();
                 TCB::dispatch();
                 riscv::write_sstatus(sstatus);
                 riscv::write_sepc(sepc);
+
                 set_return_value(1);
             }
 
@@ -196,6 +198,7 @@ extern "C" void handle_ecall_and_exception() {
 
         } else if (sys_call_code == OP_CODES::sync_switch) {
 //            kvc::print_str("eeeeeeeee");
+            //todo extract into function
             sepc = riscv::read_sepc() + 4;
             sstatus = riscv::read_sstatus();
             TCB::dispatch();

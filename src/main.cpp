@@ -21,6 +21,8 @@ void dummy_thread(void*) {
     }
 }
 
+//TODO MAKE SEM_CLOSE WORK WITH -1
+
 auto main() -> int {
 
     kvc::print_str("Poceo\n");
