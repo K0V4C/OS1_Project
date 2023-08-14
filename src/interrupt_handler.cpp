@@ -58,6 +58,14 @@ void panic(const char* msg) {
 
 }
 
+inline void sync_dispatch() {
+    uint64 volatile sepc = riscv::read_sepc() + 4;
+    uint64 volatile sstatus = riscv::read_sstatus();
+    TCB::dispatch();
+    riscv::write_sstatus(sstatus);
+    riscv::write_sepc(sepc);
+}
+
 // remember to add a0, a1, a2, a3, a4 to args
 extern "C" void handle_ecall_and_exception() {
     uint64 args[5];
@@ -69,9 +77,6 @@ extern "C" void handle_ecall_and_exception() {
 //     print_status(args);
 
     uint64 volatile scause = riscv::read_scause();
-
-    // case is just stupid
-    uint64 volatile sepc, sstatus;
 
     if(scause == TRAP_TYPE::illegal_instruction) {
         panic("Illegal instruction");
@@ -116,13 +121,8 @@ extern "C" void handle_ecall_and_exception() {
                 set_return_value(-1);
             } else {
                 TCB::running->set_state(TCB::State::FINISHED);
-                //todo extract into function
-                sepc = riscv::read_sepc() + 4;
-                sstatus = riscv::read_sstatus();
-                TCB::dispatch();
-                riscv::write_sstatus(sstatus);
-                riscv::write_sepc(sepc);
-
+                // todo may couse errors
+                sync_dispatch();
                 set_return_value(1);
             }
 
@@ -197,17 +197,12 @@ extern "C" void handle_ecall_and_exception() {
         }else if(sys_call_code == OP_CODES::c_getc) {
 
         } else if (sys_call_code == OP_CODES::sync_switch) {
-//            kvc::print_str("eeeeeeeee");
-            //todo extract into function
-            sepc = riscv::read_sepc() + 4;
-            sstatus = riscv::read_sstatus();
-            TCB::dispatch();
-            riscv::write_sstatus(sstatus);
-            riscv::write_sepc(sepc);
+            // todo may couse errors
+            sync_dispatch();
 
         } else if (sys_call_code == OP_CODES::mode_switch) {
             //change to user mode
-            sstatus =  riscv::read_sstatus();
+            uint64 volatile sstatus =  riscv::read_sstatus();
             sstatus = sstatus & (~SStatus::SSTATUS_SPP);
             riscv::write_sstatus(sstatus);
 
