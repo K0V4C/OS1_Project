@@ -136,7 +136,7 @@ extern "C" void handle_ecall_and_exception() {
             // handle args[1]
             // init args[2]
             int ret;
-            sem_t *handle = (sem_t*)args[1]lptr);
+            sem_t *handle = (sem_t*)args[1];
             uint64 init = (uint64)args[2];
             KernelSemaphore* new_sem = KernelSemaphore::create_semaphore(init);
             *handle = new_sem;
