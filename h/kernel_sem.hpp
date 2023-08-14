@@ -39,6 +39,8 @@ public:
 
     int get_value () const {return sem_value; }
 
+    static void release(KernelSemaphore*);
+
     static KernelSemaphore* create_semaphore(int val);
 
     void* operator new(size_t size);

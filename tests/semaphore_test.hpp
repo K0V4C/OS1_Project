@@ -132,13 +132,10 @@ auto sem_run() -> void {
     kvc::print_str("\n-------------- Starting tests for  SEMAPHORES -------------\n");
 
     TCB* threads[10];
-    // Delegating main thread
-    threads[0] = TCB::create_thread(nullptr);
-    TCB::running = threads[0];
 
-#if 0
-    sem1 = KernelSemaphore::create_semaphore(1);
-    sem2 = KernelSemaphore::create_semaphore(3);
+#if 1
+    sem1 = KernelSemaphore::create_semaphore(0);
+    sem2 = KernelSemaphore::create_semaphore(1);
 
     threads[1] = TCB::create_thread(&player_one);
     threads[2] = TCB::create_thread(&player_two);

@@ -24,17 +24,16 @@ void dummy_thread(void*) {
 auto main() -> int {
 
     kvc::print_str("Poceo\n");
-
     set_stvec();
 
+    // Delegating main and idle thread
     TCB* main_thread = TCB::create_thread(nullptr);
     TCB::running = main_thread;
-
     TCB* loop_thread = TCB::create_thread(dummy_thread);
 
-    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
-    change_privilege();
-    userMain();
+//    riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
+//    change_privilege();
+//    userMain();
 
 //    sys_calls_run1();
 //    sys_calls_run2();

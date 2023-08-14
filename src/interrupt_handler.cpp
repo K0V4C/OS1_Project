@@ -14,6 +14,7 @@
 #define sys_call_code args[0]
 
 typedef TCB* thread_t;
+typedef KernelSemaphore* sem_t;
 
 inline void set_return_value(uint64 ret) {
     asm volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
@@ -121,22 +122,67 @@ extern "C" void handle_ecall_and_exception() {
 
         } else if(sys_call_code == OP_CODES::c_thread_dispatch) {
             // Only op code
+            // todo Should it be dispatch here?
             TCB::yield();
 
         } else if(sys_call_code == OP_CODES::c_thread_join) {
             //  handle args[1]
             thread_t handle = (thread_t)args[1];
-            handle->add_blocked(handle);
+            handle->add_blocked(TCB::running);
             // Edit to make it work
 //            TCB::yield();
 
         } else if(sys_call_code == OP_CODES::c_sem_open) {
+            // handle args[1]
+            // init args[2]
+            int ret;
+            sem_t *handle = (sem_t*)args[1]lptr);
+            uint64 init = (uint64)args[2];
+            KernelSemaphore* new_sem = KernelSemaphore::create_semaphore(init);
+            *handle = new_sem;
+            if(new_sem == nullptr){
+                ret = -1;
+            } else {
+                ret = 0;
+            }
+            set_return_value(ret);
 
         } else if(sys_call_code == OP_CODES::c_sem_close) {
+            // handle args[1]
+            int ret;
+            sem_t handle = (sem_t)args[1];
+            if(handle == nullptr) {
+                ret = -1;
+            } else {
+                KernelSemaphore::release(handle);
+                delete handle;
+                ret = 0;
+            }
+            set_return_value(ret);
 
         }else if(sys_call_code == OP_CODES::c_sem_wait) {
+            // id args[1]
+            int ret;
+            sem_t handle = (sem_t)args[1];
+            if(handle == nullptr){
+                ret = -1;
+            } else {
+                ret = 0;
+                handle->wait();
+            }
+            set_return_value(ret);
 
         } else if(sys_call_code == OP_CODES::c_sem_signal) {
+            // id args[2]
+            int ret;
+            sem_t handle = (sem_t)args[1];
+            if(handle == nullptr){
+                ret = -1;
+            } else {
+                ret = 0;
+                handle->signal();
+            }
+            set_return_value(ret);
 
         }else if(sys_call_code == OP_CODES::c_time_sleep) {
 
@@ -154,7 +200,6 @@ extern "C" void handle_ecall_and_exception() {
 
         } else if (sys_call_code == OP_CODES::mode_switch) {
             //change to user mode
-
             sstatus =  riscv::read_sstatus();
             sstatus = sstatus & (~SStatus::SSTATUS_SPP);
             riscv::write_sstatus(sstatus);

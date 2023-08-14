@@ -34,6 +34,14 @@ KernelSemaphore* KernelSemaphore::create_semaphore(int val) {
     return new KernelSemaphore(val);
 }
 
+void KernelSemaphore::release(KernelSemaphore* sem) {
+    // release all threads blocked on this semaphore
+    // TODO: add -1 for all unblocked by this
+    while(sem->blocked_queue_start != nullptr) {
+        sem->unblock();
+    }
+}
+
 void KernelSemaphore::block() {
 
     blocked_node* new_node = new blocked_node();

@@ -15,34 +15,46 @@ void operator delete (void* ptr) {
     mem_free(ptr);
 }
 
-Thread::Thread(void (*body)(void *), void *arg) {
-
-}
+Thread::Thread(void (*body)(void *), void *arg) : body(body), arg(arg){}
 
 Thread::~Thread() {
-
+    // Sta ovde treba?
 }
 
 int Thread::start() {
-    return 0;
+    return thread_create(&myHandle, body, arg);
 }
 
 void Thread::join() {
-
+    // TODO
 }
 
 void Thread::dispatch() {
-
+    thread_dispatch();
 }
 
 int Thread::sleep(time_t) {
+    // todo
     return 0;
 }
 
-Thread::Thread() {
+Thread::Thread():body(nullptr), arg(nullptr){}
 
+Semaphore::Semaphore(unsigned int init) {
+    sem_open(&myHandle, init);
+}
+
+Semaphore::~Semaphore() {
+    sem_close(myHandle);
+}
+
+int Semaphore::wait() {
+    return sem_wait(myHandle);
+}
+
+int Semaphore::signal() {
+    return sem_signal(myHandle);
 }
 
 #endif
-
 
