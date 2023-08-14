@@ -47,7 +47,7 @@ void TCB::dispatch() {
 void *TCB::operator new(size_t size) {
     return MemoryAllocator::allocate_blocks(
             MemoryAllocator::size_in_blocks(size)
-            );
+            )
 }
 
 
