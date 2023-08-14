@@ -48,14 +48,10 @@ public:
     static TCB* running;
     static  uint64 time_slice_counter;
 
-    void set_state(State state) {
-        this->state = state;
-    }
-    State get_state() const {
-        return this->state;
-    }
+    void set_state(State state) {this->state = state;}
+    State get_state() const {return this->state;}
 
-    uint64 get_time_slice() {return time_slice; }
+    uint64 get_time_slice() {return time_slice;}
 
     static void yield();
     static void dispatch();
