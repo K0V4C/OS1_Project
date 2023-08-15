@@ -29,6 +29,10 @@ inline void thread_setup(){
     TCB::running = main_thread;
 }
 
+void user_main_wrapper(void*){
+    userMain();
+}
+
 //TODO MAKE SEM_CLOSE WORK WITH -1
 
 auto main() -> int {
@@ -38,8 +42,9 @@ auto main() -> int {
     // Delegating main and idle thread
     thread_setup();
     riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
-    change_privilege();
-    userMain();
+    thread_t user_main;
+//    change_privilege();
+    thread_create(&user_main, user_main_wrapper, nullptr);
 
     kvc::print_str("Uspeo\n");
 
