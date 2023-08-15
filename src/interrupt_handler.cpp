@@ -151,10 +151,7 @@ extern "C" void handle_ecall_and_exception() {
     else if(sys_call_code == OP_CODES::c_thread_dispatch) {
         // Only op code
         // todo Should it be dispatch here?
-//        TCB::yield();
-
         sync_dispatch();
-//        TCB::dispatch();
     }
 
     else if(sys_call_code == OP_CODES::c_thread_join) {
