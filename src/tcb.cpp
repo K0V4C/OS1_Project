@@ -19,11 +19,6 @@ void TCB::pop_spp_spie() {
     asm volatile ("sret");
 }
 
-// Should be removed and made into one constructor
-//TCB *TCB::create_thread(TCB::Body body) {
-//    return new TCB(body, TIME_SLICE);
-//}
-
 TCB *TCB::create_thread(TCB::Body body, void* stack, void* arg) {
     return new TCB(body, TIME_SLICE, stack, arg);
 }
@@ -87,27 +82,6 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
 
         if(body) Scheduler::put(this);
 }
-
-// old
-//TCB::TCB(TCB::Body body, uint64 time_slice ):
-//    body(body), time_slice(time_slice) {
-//
-//    stack = body != nullptr ? (char*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
-//                    DEFAULT_STACK_SIZE)): nullptr;
-//
-//    uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
-//    context = {
-//            (uint64)&thread_wrapper,
-//            sp_start
-//    };
-//
-//    state = State::NOT_FINISHED;
-//
-//    join_queue = KernelSemaphore::create_semaphore(0);
-//
-//    if(body) Scheduler::put(this);
-//
-//}
 
 void TCB::unblock() {
     while(join_queue->get_value() < 0)

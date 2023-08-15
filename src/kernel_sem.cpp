@@ -57,7 +57,7 @@ void KernelSemaphore::block() {
         blocked_queue_tail = new_node;
     }
 
-    //  has to be yield
+    //  todo reformat this
     TCB::running->set_state(TCB::State::BLOCKED);
     uint64 volatile sepc = riscv::read_sepc() + 4;
     uint64 volatile sstatus = riscv::read_sstatus();

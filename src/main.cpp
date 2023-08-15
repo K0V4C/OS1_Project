@@ -15,7 +15,7 @@ inline void set_stvec(){
 
 void dummy_thread(void*) {
     while(true) {
-//        kvc::print_str("==lood thread==\n");
+//        kvc::print_str("==loop thread==\n");
         TCB::yield();
     }
 }
@@ -37,17 +37,16 @@ void user_main_wrapper(void*){
 
 auto main() -> int {
 
-    kvc::print_str("Poceo\n");
     set_stvec();
     // Delegating main and idle thread
     thread_setup();
     riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
     thread_t user_main;
-//    change_privilege();
+//    userMain();
+    change_privilege();
     thread_create(&user_main, user_main_wrapper, nullptr);
-
-    kvc::print_str("Uspeo\n");
-
+//    userMain();
+    thread_exit();
     return 0;
 }
 
