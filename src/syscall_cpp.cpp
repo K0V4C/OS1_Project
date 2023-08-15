@@ -1,9 +1,6 @@
 //
 // Created by lazar on 5/16/23.
 //
-#ifndef _syscall_cpp
-#define _syscall_cpp
-
 #include "../h/syscall_c.h"
 #include "../h/syscall_cpp.hpp"
 #include "../lib/console.h"
@@ -76,5 +73,3 @@ char Console::getc() {
 void Console::putc(char a) {
     // TODO
 }
-
-#endif

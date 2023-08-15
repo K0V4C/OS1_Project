@@ -64,7 +64,11 @@ inline void sync_dispatch() {
     TCB::dispatch();
     riscv::write_sstatus(sstatus);
     riscv::write_sepc(sepc);
+
 }
+
+
+
 
 // remember to add a0, a1, a2, a3, a4 to args
 extern "C" void handle_ecall_and_exception() {
@@ -147,15 +151,17 @@ extern "C" void handle_ecall_and_exception() {
     else if(sys_call_code == OP_CODES::c_thread_dispatch) {
         // Only op code
         // todo Should it be dispatch here?
-        TCB::yield();
+//        TCB::yield();
 
+        sync_dispatch();
+//        TCB::dispatch();
     }
 
     else if(sys_call_code == OP_CODES::c_thread_join) {
         //  handle args[1]
         thread_t handle = (thread_t)args[1];
         handle->add_blocked(TCB::running);
-        // Edit to make it work
+        //todo Edit to make it work
 //            TCB::yield();
 
     }
@@ -243,7 +249,6 @@ extern "C" void handle_ecall_and_exception() {
     else if (sys_call_code == OP_CODES::sync_switch) {
         // todo may couse errors
         sync_dispatch();
-
     }
 
     else if (sys_call_code == OP_CODES::mode_switch) {
@@ -251,6 +256,12 @@ extern "C" void handle_ecall_and_exception() {
         uint64 volatile sstatus =  riscv::read_sstatus();
         sstatus = sstatus & (~SStatus::SSTATUS_SPP);
         riscv::write_sstatus(sstatus);
+    }
+
+    else {
+        kvc::print_str("\n------>OP CODE NOT FOUND\n");
+        print_status(args);
+        panic("NOT VALID OP CODE");
     }
     // =================================================================================================================
 }
@@ -261,9 +272,8 @@ extern "C" void handle_third_lv_interrupt() {
     // sip -> supervisor interrupt pending
     TCB::time_slice_counter++;
     if(TCB::running->time_slice_counter >= TCB::running->get_time_slice()) {
-//        kvc::print_str("Timer\n");
-        uint64 sepc = riscv::read_sepc();
-        uint64  sstatus = riscv::read_sstatus();
+        uint64 volatile sepc = riscv::read_sepc();
+        uint64 volatile sstatus = riscv::read_sstatus();
         TCB::time_slice_counter = 0;
         TCB::dispatch();
         riscv::write_sstatus(sstatus);

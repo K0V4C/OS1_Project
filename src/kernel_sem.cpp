@@ -6,7 +6,7 @@
 #include "../h/output.hpp"
 #include "../h/scheduler.hpp"
 #include "../h/tcb.hpp"
-
+#include "../h/utility.hpp"
 // Semaphore node
 
 void *KernelSemaphore::blocked_node::operator new(size_t size) {
@@ -59,7 +59,12 @@ void KernelSemaphore::block() {
 
     //  has to be yield
     TCB::running->set_state(TCB::State::BLOCKED);
-    TCB::yield();
+    uint64 volatile sepc = riscv::read_sepc() + 4;
+    uint64 volatile sstatus = riscv::read_sstatus();
+    TCB::dispatch();
+    riscv::write_sstatus(sstatus);
+    riscv::write_sepc(sepc);
+//    TCB::yield();
 }
 
 void KernelSemaphore::unblock() {

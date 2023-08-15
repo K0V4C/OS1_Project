@@ -15,8 +15,7 @@ inline void set_stvec(){
 
 void dummy_thread(void*) {
     while(true) {
-        // ovo je sus
-//        kvc::print_str("aaa");
+//        kvc::print_str("==lood thread==\n");
         TCB::yield();
     }
 }
