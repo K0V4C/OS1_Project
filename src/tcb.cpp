@@ -20,9 +20,9 @@ void TCB::pop_spp_spie() {
 }
 
 // Should be removed and made into one constructor
-TCB *TCB::create_thread(TCB::Body body) {
-    return new TCB(body, TIME_SLICE);
-}
+//TCB *TCB::create_thread(TCB::Body body) {
+//    return new TCB(body, TIME_SLICE);
+//}
 
 TCB *TCB::create_thread(TCB::Body body, void* stack, void* arg) {
     return new TCB(body, TIME_SLICE, stack, arg);
@@ -41,10 +41,6 @@ void TCB::dispatch() {
         && old->get_state() != State::BLOCKED)  Scheduler::put(old);
 
     TCB::running = Scheduler::get();
-//    kvc::print_str("==================\n");
-//    kvc::print_str("Stack: ");kvc::print_void((void*)running->stack);kvc::new_line();
-//    kvc::print_str("SP: ");kvc::print_void((void*)running->context.sp);kvc::new_line();
-//    kvc::print_str("==================\n");
 
     TCB::context_switch(&old->context, &running->context);
 }
@@ -72,9 +68,14 @@ void TCB::thread_wrapper() {
 TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
     body(body), time_slice(time_slice), arg(arg) {
 
-        this->stack =(char*)stack;
-        uint64 sp_start = stack != nullptr ? (uint64) &this->stack[DEFAULT_STACK_SIZE] : 0;
+        if(body == nullptr) {
+            this->stack = body != nullptr ? (char*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
+                    DEFAULT_STACK_SIZE)): nullptr;
+        } else {
+            this->stack = (char *) stack;
+        }
 
+        uint64 sp_start = this->stack != nullptr ? (uint64) &this->stack[DEFAULT_STACK_SIZE] : 0;
         context = {
                 (uint64)&thread_wrapper,
                 sp_start
@@ -88,25 +89,25 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
 }
 
 // old
-TCB::TCB(TCB::Body body, uint64 time_slice ):
-    body(body), time_slice(time_slice) {
-
-    stack = body != nullptr ? (char*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
-                    DEFAULT_STACK_SIZE)): nullptr;
-
-    uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
-    context = {
-            (uint64)&thread_wrapper,
-            sp_start
-    };
-
-    state = State::NOT_FINISHED;
-
-    join_queue = KernelSemaphore::create_semaphore(0);
-
-    if(body) Scheduler::put(this);
-
-}
+//TCB::TCB(TCB::Body body, uint64 time_slice ):
+//    body(body), time_slice(time_slice) {
+//
+//    stack = body != nullptr ? (char*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
+//                    DEFAULT_STACK_SIZE)): nullptr;
+//
+//    uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;
+//    context = {
+//            (uint64)&thread_wrapper,
+//            sp_start
+//    };
+//
+//    state = State::NOT_FINISHED;
+//
+//    join_queue = KernelSemaphore::create_semaphore(0);
+//
+//    if(body) Scheduler::put(this);
+//
+//}
 
 void TCB::unblock() {
     while(join_queue->get_value() < 0)

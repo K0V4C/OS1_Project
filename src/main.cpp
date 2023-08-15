@@ -1,12 +1,12 @@
-#include "../tests/memory_allocator_test.hpp"
-#include "../tests/sys_calls_test.hpp"
 #include "../h/tcb.hpp"
-#include "../tests/sync_tests.h"
-#include "../tests/async_tests.hpp"
-#include "../tests/semaphore_test.hpp"
+#include "../h/utility.hpp"
+#include "../h/output.hpp"
+#include "../h/syscall_c.h"
+#include "../h/bit_masks.hpp"
+
+typedef TCB* thread_t;
 
 void userMain();
-
 extern "C" void trap_supervisor();
 
 inline void set_stvec(){
@@ -20,30 +20,43 @@ void dummy_thread(void*) {
     }
 }
 
+inline void thread_setup(){
+    thread_t main_thread, loop_thread;
+
+    thread_create(&main_thread, nullptr, nullptr);
+    thread_create(&loop_thread, dummy_thread, nullptr);
+
+    TCB::running = main_thread;
+}
+
 //TODO MAKE SEM_CLOSE WORK WITH -1
 
 auto main() -> int {
 
     kvc::print_str("Poceo\n");
     set_stvec();
-
     // Delegating main and idle thread
-    TCB* main_thread = TCB::create_thread(nullptr);
-    TCB::running = main_thread;
-    TCB* loop_thread = TCB::create_thread(dummy_thread);
-
+    thread_setup();
     riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
-//    change_privilege();
+    change_privilege();
     userMain();
 
+    kvc::print_str("Uspeo\n");
+
+    return 0;
+}
+
+
+// ++++++++++++++++++++++ OLD TESTS  +++++++++++++++++++++++++=
+//#include "../tests/sync_tests.h"
+//#include "../tests/async_tests.hpp"
+//#include "../tests/semaphore_test.hpp"
+//#include "../tests/memory_allocator_test.hpp"
+//#include "../tests/sys_calls_test.hpp"
 //    sys_calls_run1();
 //    sys_calls_run2();
 //    sync_test_run();
 //    async_run();
 //    sem_run();
 //    memory_allocator_run();
-
-    kvc::print_str("Uspeo\n");
-
-    return 0;
-}
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

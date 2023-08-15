@@ -34,7 +34,6 @@ private:
 
     Context context;
 
-    TCB(Body body, uint64 time_slice);
     TCB(Body body, uint64 time_slice, void* stack, void* arg);
 
     static void thread_wrapper();
@@ -57,9 +56,8 @@ public:
     static void dispatch();
     static void context_switch(Context* old_context, Context* new_context);
 
-    static TCB* create_thread(Body body);
-    // New one
     static TCB* create_thread(TCB::Body body, void* stack, void* arg);
+
     // Helper function for wrapper method
     static void pop_spp_spie();
 
