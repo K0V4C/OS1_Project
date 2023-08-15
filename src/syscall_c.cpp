@@ -33,7 +33,7 @@ int thread_create (
     void(*start_routine)(void*),
     void* arg) {
 
-    void* stack = mem_alloc(DEFAULT_STACK_SIZE*10);
+    void* stack = mem_alloc(DEFAULT_STACK_SIZE);
     asm volatile ("mv a0, %[stack]": : [stack] "r"  (stack));
     asm volatile ("mv a1, %[handle]": : [handle] "r"  (handle));
     asm volatile ("mv a2, %[function]": : [function] "r"  (start_routine));

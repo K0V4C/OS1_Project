@@ -41,6 +41,10 @@ void TCB::dispatch() {
         && old->get_state() != State::BLOCKED)  Scheduler::put(old);
 
     TCB::running = Scheduler::get();
+//    kvc::print_str("==================\n");
+//    kvc::print_str("Stack: ");kvc::print_void((void*)running->stack);kvc::new_line();
+//    kvc::print_str("SP: ");kvc::print_void((void*)running->context.sp);kvc::new_line();
+//    kvc::print_str("==================\n");
 
     TCB::context_switch(&old->context, &running->context);
 }
@@ -68,7 +72,7 @@ void TCB::thread_wrapper() {
 TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
     body(body), time_slice(time_slice), arg(arg) {
 
-        this->stack =(uint64*)stack;
+        this->stack =(char*)stack;
         uint64 sp_start = stack != nullptr ? (uint64) &this->stack[DEFAULT_STACK_SIZE] : 0;
 
         context = {
@@ -87,7 +91,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
 TCB::TCB(TCB::Body body, uint64 time_slice ):
     body(body), time_slice(time_slice) {
 
-    stack = body != nullptr ? (uint64*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
+    stack = body != nullptr ? (char*) MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(
                     DEFAULT_STACK_SIZE)): nullptr;
 
     uint64 sp_start = stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0;

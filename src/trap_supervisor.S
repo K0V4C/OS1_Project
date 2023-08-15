@@ -22,7 +22,7 @@ ecall_and_exception:
     csrr t0, sepc
     addi t0, t0, 4
     csrw sepc, t0
-    csrr t0, sstatus
+    csrr t0, sscratch
 
     addi sp, sp, -256
     # save regular regs

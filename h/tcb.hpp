@@ -21,7 +21,7 @@ public:
 private:
 
     Body body;
-    uint64* stack;
+    char* stack;
     uint64 time_slice;
     State state;
 
