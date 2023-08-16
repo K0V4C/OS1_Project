@@ -66,13 +66,12 @@ char KernelConsole::input_get() {
     return KernelConsole::get_instance().input_buffer->get();
 }
 
-//todo
-bool KernelConsole::output_empty() {
-    return KernelConsole::get_instance().output_buffer->size == 0;
+bool KernelConsole::output_has_items() {
+    return KernelConsole::get_instance().output_buffer->size != 0;
 }
 
-bool KernelConsole::input_full() {
-    return KernelConsole::get_instance().input_buffer->size == KernelConsole::MAX_BUFFER_SIZE;
+bool KernelConsole::input_not_full() {
+    return KernelConsole::get_instance().input_buffer->size != KernelConsole::MAX_BUFFER_SIZE;
 }
 
 KernelConsole::KernelConsole() {
@@ -83,7 +82,7 @@ KernelConsole::KernelConsole() {
 void KernelConsole::flush_input() {
     // Input stream
     char volatile console_status = *((char*)CONSOLE_STATUS);
-    while((console_status & CONSOLE_RX_STATUS_BIT) && !input_full()) {
+    while((console_status & CONSOLE_RX_STATUS_BIT) && input_not_full()) {
         char* volatile console_rx = (char*)CONSOLE_RX_DATA;
         char volatile data = *console_rx;
 
@@ -95,7 +94,7 @@ void KernelConsole::flush_input() {
 void KernelConsole::flush_output() {
     // Output stream
     char volatile console_status = *((char*)CONSOLE_STATUS);
-    while((console_status & CONSOLE_TX_STATUS_BIT) && !output_empty()) {
+    while((console_status & CONSOLE_TX_STATUS_BIT) && output_has_items()) {
         char to_send = KernelConsole::output_get();
 
         *((uint64*)CONSOLE_TX_DATA) = to_send;

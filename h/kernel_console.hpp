@@ -47,8 +47,8 @@ public:
     static void input_put(char);
     static char input_get();
 
-    static bool output_empty();
-    static bool input_full();
+    static bool output_has_items();
+    static bool input_not_full();
 
 };
 

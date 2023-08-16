@@ -170,7 +170,6 @@ auto MemoryAllocator::free_blocks(void* raw) -> int {
     if(iter->prev)
         if(MemoryAllocator::overlaps(iter->prev, raw)) return -2;
 
-    // TODO:
     // Protection if pointer given is not aligned properly
 
 

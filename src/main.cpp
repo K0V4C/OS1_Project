@@ -34,8 +34,6 @@ void user_main_wrapper(void*){
 
 /* TODO:
     MAKE SEM_CLOSE WORK WITH -1
-    TEST JOIN
-    MAKE CONSOLE
     MAKE PERIODIC THREAD
     REFACTOR
     maybe change how change_privalage works
