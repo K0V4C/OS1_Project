@@ -16,7 +16,7 @@ inline void set_stvec(){
 void dummy_thread(void*) {
     while(true) {
 //        kvc::print_str("==loop thread==\n");
-        TCB::yield();
+        thread_dispatch();
     }
 }
 
@@ -49,10 +49,11 @@ auto main() -> int {
     // Delegating main and idle thread
     thread_setup();
     riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
+
     thread_t user_main;
     change_privilege();
     thread_create(&user_main, user_main_wrapper, nullptr);
-    thread_exit();
+    thread_join(user_main);
     return 0;
 }
 

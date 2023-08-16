@@ -22,10 +22,12 @@ void TCB::pop_spp_spie() {
 TCB *TCB::create_thread(TCB::Body body, void* stack, void* arg) {
     return new TCB(body, TIME_SLICE, stack, arg);
 }
-
 void TCB::yield() {
-    asm volatile ("mv a0, %[code]": : [code] "r"  (TCB::SWITCH_CODE));
-    asm volatile("ecall");
+    uint64 volatile sepc = riscv::read_sepc();
+    uint64 volatile sstatus = riscv::read_sstatus();
+    TCB::dispatch();
+    riscv::write_sstatus(sstatus);
+    riscv::write_sepc(sepc);
 }
 
 void TCB::dispatch() {

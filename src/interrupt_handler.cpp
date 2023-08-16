@@ -59,15 +59,6 @@ void panic(const char* msg) {
 
 }
 
-inline void sync_dispatch() {
-    uint64 volatile sepc = riscv::read_sepc();
-    uint64 volatile sstatus = riscv::read_sstatus();
-    TCB::dispatch();
-    riscv::write_sstatus(sstatus);
-    riscv::write_sepc(sepc);
-
-}
-
 extern "C" void handle_ecall_and_exception() {
 
     // ============================================= SAVE REGS =========================================================
@@ -139,24 +130,21 @@ extern "C" void handle_ecall_and_exception() {
             set_return_value(-1);
         } else {
             TCB::running->set_state(TCB::State::FINISHED);
-            // todo may couse errors
-            sync_dispatch();
+            TCB::yield();
             set_return_value(1);
         }
     }
 
     else if(sys_call_code == OP_CODES::c_thread_dispatch) {
         // Only op code
-        // todo Should it be dispatch here?
-        sync_dispatch();
+        TCB::yield();
     }
 
     else if(sys_call_code == OP_CODES::c_thread_join) {
         //  handle args[1]
         thread_t handle = (thread_t)args[1];
         handle->add_blocked(TCB::running);
-        //todo Edit to make it work
-//            TCB::yield();
+        TCB::yield();
 
     }
 
@@ -232,20 +220,12 @@ extern "C" void handle_ecall_and_exception() {
         // char args[1]
         KernelConsole::output_put((char)args[1]);
         KernelConsole::flush_output();
-//        __putc((char)args[1]);
     }
 
     else if(sys_call_code == OP_CODES::c_getc) {
-        // TODO TEMP
         KernelConsole::flush_input();
         char ret = KernelConsole::input_get();
-//        char ret = __getc();
         set_return_value(ret);
-    }
-
-    else if (sys_call_code == OP_CODES::sync_switch) {
-        // todo may couse errors
-        sync_dispatch();
     }
 
     else if (sys_call_code == OP_CODES::mode_switch) {
@@ -281,8 +261,7 @@ extern "C" void handle_third_lv_interrupt() {
 }
 
 extern "C" void handle_hardware_interrupt() {
-//    console_handler();
-//    kvc::print_str("bomba");
+
     uint64 interrupt_number = plic_claim();
     plic_complete((int)interrupt_number);
     riscv::mask_clear_sstatus(SStatus::SSTATUS_SPP);
