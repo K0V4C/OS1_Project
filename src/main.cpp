@@ -15,7 +15,6 @@ inline void set_stvec(){
 
 void dummy_thread(void*) {
     while(true) {
-//        kvc::print_str("==loop thread==\n");
         thread_dispatch();
     }
 }
@@ -53,21 +52,7 @@ auto main() -> int {
     thread_t user_main;
     change_privilege();
     thread_create(&user_main, user_main_wrapper, nullptr);
+    
     thread_join(user_main);
     return 0;
 }
-
-
-// ++++++++++++++++++++++ OLD TESTS  +++++++++++++++++++++++++=
-//#include "../tests/sync_tests.h"
-//#include "../tests/async_tests.hpp"
-//#include "../tests/semaphore_test.hpp"
-//#include "../tests/memory_allocator_test.hpp"
-//#include "../tests/sys_calls_test.hpp"
-//    sys_calls_run1();
-//    sys_calls_run2();
-//    sync_test_run();
-//    async_run();
-//    sem_run();
-//    memory_allocator_run();
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

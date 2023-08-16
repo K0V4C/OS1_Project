@@ -41,7 +41,7 @@ public:
 private:
     sem_t myHandle;
 };
-
+//
 //class PeriodicThread : public Thread {
 //public:
 //    void terminate ();

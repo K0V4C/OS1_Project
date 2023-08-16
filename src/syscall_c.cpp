@@ -104,13 +104,11 @@ char getc() {
     return (char)ret;
 }
 
-// TODO NOT DONE
 void putc(char a) {
     asm volatile ("mv a0, %[a]": : [a] "r"  (a));
     set_and_ecall(OP_CODES::c_putc);
 }
 
-// TODO NOT DONE
 void change_privilege() {
     set_and_ecall(OP_CODES::mode_switch);
 }

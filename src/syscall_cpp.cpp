@@ -66,10 +66,9 @@ int Semaphore::signal() {
 }
 
 char Console::getc() {
-    // TODO
-    return 0;
+    return getc();
 }
 
 void Console::putc(char a) {
-    // TODO
+    putc(a);
 }

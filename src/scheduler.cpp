@@ -15,10 +15,6 @@ Scheduler &Scheduler::get_instance() {
 int Scheduler::put(TCB* tcb) {
     Scheduler& instance = Scheduler::get_instance();
 
-//    scheduled_node* new_node = (scheduled_node*) MemoryAllocator::allocate_blocks(
-//            MemoryAllocator::size_in_blocks(sizeof(scheduled_node))
-//            );
-
     scheduled_node* new_node = new scheduled_node();
 
     if(!new_node)

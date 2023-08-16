@@ -126,6 +126,7 @@ extern "C" void handle_ecall_and_exception() {
 
     else if(sys_call_code == OP_CODES::c_thread_exit) {
         // Only op code
+
         if(TCB::running == nullptr) {
             set_return_value(-1);
         } else {
@@ -133,6 +134,7 @@ extern "C" void handle_ecall_and_exception() {
             TCB::yield();
             set_return_value(1);
         }
+
     }
 
     else if(sys_call_code == OP_CODES::c_thread_dispatch) {
