@@ -33,7 +33,15 @@ void user_main_wrapper(void*){
     userMain();
 }
 
-//TODO MAKE SEM_CLOSE WORK WITH -1
+/* TODO:
+    MAKE SEM_CLOSE WORK WITH -1
+    TEST JOIN
+    MAKE CONSOLE
+    MAKE PERIODIC THREAD
+    REFACTOR
+    maybe change how change_privalage works
+    what does pop spp spie do?
+ */
 
 auto main() -> int {
 
@@ -42,10 +50,8 @@ auto main() -> int {
     thread_setup();
     riscv::mask_set_sstatus(SStatus::SSTATUS_SIE);
     thread_t user_main;
-//    userMain();
     change_privilege();
     thread_create(&user_main, user_main_wrapper, nullptr);
-//    userMain();
     thread_exit();
     return 0;
 }

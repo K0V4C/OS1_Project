@@ -59,7 +59,7 @@ void KernelSemaphore::block() {
 
     //  todo reformat this
     TCB::running->set_state(TCB::State::BLOCKED);
-    uint64 volatile sepc = riscv::read_sepc() + 4;
+    uint64 volatile sepc = riscv::read_sepc();
     uint64 volatile sstatus = riscv::read_sstatus();
     TCB::dispatch();
     riscv::write_sstatus(sstatus);

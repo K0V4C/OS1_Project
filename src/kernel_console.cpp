@@ -23,7 +23,7 @@ void KernelConsole::Buffer::put(char a) {
     tail %= len;
     size++;
 
-    space_available->signal();
+    item_available->signal();
 }
 
 char KernelConsole::Buffer::get() {
@@ -33,7 +33,7 @@ char KernelConsole::Buffer::get() {
     head %= len;
     size--;
 
-    item_available->signal();
+    space_available->signal();
     return ret;
 }
 
@@ -78,4 +78,27 @@ bool KernelConsole::input_full() {
 KernelConsole::KernelConsole() {
     input_buffer = new Buffer(KernelConsole::MAX_BUFFER_SIZE);
     output_buffer = new Buffer(KernelConsole::MAX_BUFFER_SIZE);
+}
+
+void KernelConsole::flush_input() {
+    // Input stream
+    char volatile console_status = *((char*)CONSOLE_STATUS);
+    while((console_status & CONSOLE_RX_STATUS_BIT) && !input_full()) {
+        char* volatile console_rx = (char*)CONSOLE_RX_DATA;
+        char volatile data = *console_rx;
+
+        KernelConsole::input_put(data);
+        console_status = *((char*)CONSOLE_STATUS);
+    }
+}
+
+void KernelConsole::flush_output() {
+    // Output stream
+    char volatile console_status = *((char*)CONSOLE_STATUS);
+    while((console_status & CONSOLE_TX_STATUS_BIT) && !output_empty()) {
+        char to_send = KernelConsole::output_get();
+
+        *((uint64*)CONSOLE_TX_DATA) = to_send;
+        console_status = *((char*)CONSOLE_STATUS);
+    }
 }

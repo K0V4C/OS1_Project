@@ -38,6 +38,9 @@ public:
 
     static KernelConsole& get_instance();
 
+    static void flush_input();
+    static void flush_output();
+
     static void output_put(char);
     static char output_get();
 

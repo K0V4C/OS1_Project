@@ -231,11 +231,13 @@ extern "C" void handle_ecall_and_exception() {
     else if(sys_call_code == OP_CODES::c_putc) {
         // char args[1]
         KernelConsole::output_put((char)args[1]);
+        KernelConsole::flush_output();
 //        __putc((char)args[1]);
     }
 
     else if(sys_call_code == OP_CODES::c_getc) {
         // TODO TEMP
+        KernelConsole::flush_input();
         char ret = KernelConsole::input_get();
 //        char ret = __getc();
         set_return_value(ret);
@@ -279,7 +281,6 @@ extern "C" void handle_third_lv_interrupt() {
 }
 
 extern "C" void handle_hardware_interrupt() {
-    // do this yourself
 //    console_handler();
 //    kvc::print_str("bomba");
     uint64 interrupt_number = plic_claim();
@@ -287,23 +288,8 @@ extern "C" void handle_hardware_interrupt() {
     riscv::mask_clear_sstatus(SStatus::SSTATUS_SPP);
 
     if(interrupt_number == CONSOLE_IRQ){
-
-        // RX - send
-        // TX - receive
-
-        char volatile console_status = *((char*)CONSOLE_STATUS);
-
-        while(console_status & CONSOLE_RX_STATUS_BIT && !KernelConsole::output_empty()) {
-            char to_send = KernelConsole::output_get();
-            *(uint64*)CONSOLE_RX_DATA = to_send;
-            console_status = *((char*)CONSOLE_STATUS);
-        }
-
-        while(console_status & CONSOLE_TX_STATUS_BIT && !KernelConsole::input_full()) {
-            char volatile console_tx = *((char*)CONSOLE_TX_DATA);
-            KernelConsole::input_put(console_tx);
-            console_status = *((char*)CONSOLE_STATUS);
-        }
+        KernelConsole::flush_input();
+        KernelConsole::flush_output();
     }
 }
 
