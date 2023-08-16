@@ -95,7 +95,13 @@ int sem_signal(sem_t id) {
     return (int)ret;
 }
 
-int time_sleep(time_t);
+int time_sleep(time_t time) {
+    asm volatile ("mv a0, %[time]": : [time] "r"  (time));
+    set_and_ecall(OP_CODES::c_time_sleep);
+    int volatile ret;
+    SET_RET(ret);
+    return (int)ret;
+}
 
 char getc() {
     set_and_ecall(OP_CODES::c_getc);

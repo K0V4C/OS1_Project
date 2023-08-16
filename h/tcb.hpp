@@ -17,8 +17,11 @@ public:
         NOT_FINISHED,
         FINISHED,
         BLOCKED,
+        SLEEPING,
     };
 private:
+
+    // ========================================= For TCB FIELDS ========================================================
 
     Body body;
     char* stack;
@@ -42,7 +45,35 @@ private:
 
     KernelSemaphore* join_queue;
 
+    // =================================================================================================================
+
+    // ========================================= For Thread sleep ======================================================
+
+    struct sleep_node {
+
+        uint64 timer;
+        TCB* sleeping_tcb;
+        sleep_node* next;
+
+        sleep_node(uint64 timer, TCB* tcb) : timer(timer), sleeping_tcb(tcb), next(nullptr){}
+        ~sleep_node() {
+            next = nullptr;
+            timer = 0;
+        }
+
+        void* operator new(size_t size);
+        void operator delete (void* ptr);
+
+    };
+
+    static sleep_node* sleep_list_first;
+
+    // =================================================================================================================
+
 public:
+
+    static void tick();
+    static void put_to_sleep(uint64);
 
     static TCB* running;
     static  uint64 time_slice_counter;

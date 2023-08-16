@@ -42,9 +42,9 @@ void Thread::dispatch() {
     thread_dispatch();
 }
 
-int Thread::sleep(time_t) {
-    // todo
-    return 0;
+int Thread::sleep(time_t time) {
+
+    return time_sleep(time);
 }
 
 Thread::Thread():body(nullptr), arg(nullptr){}

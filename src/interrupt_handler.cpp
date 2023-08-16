@@ -214,7 +214,9 @@ extern "C" void handle_ecall_and_exception() {
     }
 
     else if(sys_call_code == OP_CODES::c_time_sleep) {
-
+        // time args[1]
+        TCB::put_to_sleep((uint64)args[1]);
+        set_return_value(0);
     }
 
     else if(sys_call_code == OP_CODES::c_putc) {
@@ -247,7 +249,9 @@ extern "C" void handle_ecall_and_exception() {
 extern "C" void handle_third_lv_interrupt() {
     // timer interrupt
 
-    // sip -> supervisor interrupt pending
+    // For sleep
+    TCB::tick();
+
     TCB::time_slice_counter++;
     if(TCB::running->time_slice_counter >= TCB::running->get_time_slice()) {
         uint64 volatile sepc = riscv::read_sepc();

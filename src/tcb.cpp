@@ -35,7 +35,8 @@ void TCB::dispatch() {
 
     if(old != nullptr
         && old->get_state() != State::FINISHED
-        && old->get_state() != State::BLOCKED)  Scheduler::put(old);
+        && old->get_state() != State::BLOCKED
+        && old->get_state() != State::SLEEPING)  Scheduler::put(old);
 
     TCB::running = Scheduler::get();
 
@@ -101,3 +102,72 @@ TCB::~TCB() {
     MemoryAllocator::free_blocks(stack);
 }
 
+TCB::sleep_node* TCB::sleep_list_first = nullptr;
+// For thread sleep
+void TCB::tick() {
+    if(TCB::sleep_list_first == nullptr)
+        return;
+
+    sleep_list_first->timer--;
+    
+    while(sleep_list_first != nullptr && sleep_list_first->timer == 0){
+        sleep_node* to_delete = sleep_list_first;
+
+        sleep_list_first->sleeping_tcb->set_state(State::NOT_FINISHED);
+        Scheduler::put(sleep_list_first->sleeping_tcb);
+        sleep_list_first = sleep_list_first->next;
+
+        delete to_delete;
+    }
+}
+
+void TCB::put_to_sleep(uint64 time) {
+
+    if(time == 0) return;
+
+    sleep_node* new_node = new sleep_node(time, TCB::running);
+    new_node->next = nullptr;
+
+    if(sleep_list_first == nullptr){
+        sleep_list_first = new_node;
+    } else {
+
+        sleep_node *iter_current, *iter_prev;
+
+        iter_current = sleep_list_first;
+        iter_prev = nullptr;
+
+        while(iter_current != nullptr && (new_node->timer >= iter_current->timer )) {
+            new_node->timer -= iter_current->timer;
+            iter_prev = iter_current;
+            iter_current = iter_current->next;
+        }
+
+        if(iter_current == sleep_list_first) {
+            // Insert at the start
+            sleep_list_first->timer -= new_node->timer;
+            new_node->next = sleep_list_first;
+            sleep_list_first = new_node;
+        } else if (iter_current == nullptr) {
+            // Insert at the end
+            iter_prev->next = new_node;
+        } else {
+            // Insert in the middle
+            iter_prev->next = new_node;
+            new_node->next = iter_current;
+        }
+
+    }
+
+    TCB::running->set_state(State::SLEEPING);
+    TCB::yield();
+}
+
+
+void *TCB::sleep_node::operator new(size_t size) {
+    return MemoryAllocator::allocate_blocks(MemoryAllocator::size_in_blocks(size));
+}
+
+void TCB::sleep_node::operator delete(void *ptr) {
+    MemoryAllocator::free_blocks(ptr);
+}
