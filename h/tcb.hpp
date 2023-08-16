@@ -46,6 +46,7 @@ public:
 
     static TCB* running;
     static  uint64 time_slice_counter;
+    int sem_return;
 
     void set_state(State state) {this->state = state;}
     State get_state() const {return this->state;}

@@ -36,8 +36,8 @@ KernelSemaphore* KernelSemaphore::create_semaphore(int val) {
 
 void KernelSemaphore::release(KernelSemaphore* sem) {
     // release all threads blocked on this semaphore
-    // TODO: add -1 for all unblocked by this
     while(sem->blocked_queue_start != nullptr) {
+        sem->blocked_queue_start->value->sem_return = -1;
         sem->unblock();
     }
 }
@@ -79,8 +79,11 @@ void KernelSemaphore::unblock() {
 
 }
 
-void KernelSemaphore::wait() {
+int KernelSemaphore::wait() {
+    TCB::running->sem_return = 0;
     if(--sem_value < 0 ) block();
+    // todo test if this works
+    return TCB::running->sem_return;
 }
 
 void KernelSemaphore::signal() {

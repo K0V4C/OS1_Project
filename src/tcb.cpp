@@ -81,6 +81,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
         state = State::NOT_FINISHED;
 
         join_queue = KernelSemaphore::create_semaphore(0);
+        sem_return = 0;
 
         if(body) Scheduler::put(this);
 }

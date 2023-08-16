@@ -33,7 +33,7 @@ private:
 
 public:
 
-    void wait();
+    int wait();
 
     void signal();
 

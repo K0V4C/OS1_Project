@@ -192,8 +192,7 @@ extern "C" void handle_ecall_and_exception() {
         if(handle == nullptr){
             ret = -1;
         } else {
-            ret = 0;
-            handle->wait();
+            ret = handle->wait();
         }
         set_return_value(ret);
 
