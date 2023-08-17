@@ -35,7 +35,8 @@ int Thread::start() {
 }
 
 void Thread::join() {
-    // TODO
+    // todo is this good?
+    thread_join(this->myHandle);
 }
 
 void Thread::dispatch() {
