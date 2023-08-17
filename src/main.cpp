@@ -1,4 +1,7 @@
 #include "../h/utility.hpp"
+#include "../h/output.hpp"
+#include "../h/syscall_c.h"
+#include "../h/syscall_cpp.hpp"
 
 auto main() -> int {
     riscv::setup_interrupt_routine();
@@ -10,13 +13,16 @@ auto main() -> int {
 }
 
 /* TODO:
-    Test sem close for -1
-    MAKE PERIODIC THREAD
     REFACTOR
     maybe change how change_privalage works
     what does pop spp spie do?
-    join for cpp
-    clear all tasks
-    write tests
     add destructors for threads?
+    clear all tasks
+ */
+
+/* TODO:
+    Test sem -1
+    Test Periodic thread
+    Test join
+    clear all tasks
  */

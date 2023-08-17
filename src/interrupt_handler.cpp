@@ -88,7 +88,7 @@ extern "C" void handle_ecall_and_exception() {
 
     else if(sys_call_code == OP_CODES::c_thread_exit) {
         // Only op code
-
+        // todo add dealocation
         if(TCB::running == nullptr) {
             set_return_value(-1);
         } else {

@@ -12,10 +12,10 @@ void operator delete (void* ptr) {
     mem_free(ptr);
 }
 
-Thread::Thread(void (*body)(void *), void *arg) : body(body), arg(arg), myHandle(nullptr){}
+Thread::Thread(void (*body)(void *), void *arg) : myHandle(nullptr), body(body), arg(nullptr){}
 
 Thread::~Thread() {
-    // Sta ovde treba?
+    // todo what here?
 }
 
 void Thread::wrapper(void *arg) {
@@ -35,7 +35,7 @@ int Thread::start() {
 }
 
 void Thread::join() {
-    // todo is this good?
+    // todo test join
     thread_join(this->myHandle);
 }
 
@@ -47,7 +47,7 @@ int Thread::sleep(time_t time) {
     return time_sleep(time);
 }
 
-Thread::Thread():body(nullptr), arg(nullptr), myHandle(nullptr){}
+Thread::Thread():myHandle(nullptr), body(nullptr), arg(nullptr){}
 
 Semaphore::Semaphore(unsigned int init) {
     sem_open(&myHandle, init);
@@ -63,6 +63,20 @@ int Semaphore::wait() {
 
 int Semaphore::signal() {
     return sem_signal(myHandle);
+}
+
+void PeriodicThread::terminate() {
+    die = true;
+}
+
+PeriodicThread::PeriodicThread(time_t period)
+    : period(period), die(false) {}
+
+void PeriodicThread::run() {
+    while(!die) {
+        periodicActivation();
+        time_sleep(period);
+    }
 }
 
 char Console::getc() {
