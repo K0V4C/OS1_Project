@@ -9,6 +9,11 @@
 #include "../lib/console.h"
 
 namespace  kvc {
+
+    void panic(const char* msg);
+
+    void print_status(uint64* arr);
+
     void __assert(const void *a, const void *b);
 
     void __assert(const uint64 a, const uint64 b);

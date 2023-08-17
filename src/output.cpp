@@ -3,6 +3,7 @@
 //
 
 #include "../h/output.hpp"
+#include "../h/utility.hpp"
 
 namespace kvc {
     void __assert(const void* a,const void* b) {
@@ -129,5 +130,43 @@ namespace kvc {
 
     void new_line() {
         __putc('\n');
+    }
+
+
+    void panic(const char *msg) {
+        kvc::print_str(msg);kvc::new_line();
+        uint64 volatile scause = riscv::read_scause();
+        kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
+
+        uint64 volatile sepc = riscv::read_sepc();
+        kvc::print_void((void*)sepc);kvc::print_str("  <-- SEPC\n");
+
+        uint64 volatile stval = riscv::read_stval();
+        kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
+        volatile int stop = 0;
+        while(true) {
+            stop++;
+        }
+    }
+
+    void print_status(uint64 *arr) {
+        kvc::print_str("+----------------------------------------+\n");
+
+        kvc::print_void((void*)arr[0]);kvc::print_str("  <-- OP_CODE\n");
+        kvc::print_void((void*)arr[1]);kvc::print_str("  <-- A0\n");
+        kvc::print_void((void*)arr[2]);kvc::print_str("  <-- A1\n");
+        kvc::print_void((void*)arr[3]);kvc::print_str("  <-- A2\n");
+        kvc::print_void((void*)arr[4]);kvc::print_str("  <-- A3\n");
+
+        uint64 volatile scause = riscv::read_scause();
+        kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
+
+        uint64 volatile sepc = riscv::read_sepc();
+        kvc::print_void((void*)sepc);kvc::print_str("  <-- SEPC\n");
+
+        uint64 volatile stval = riscv::read_stval();
+        kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
+
+        kvc::print_str("+----------------------------------------+\n");
     }
 }

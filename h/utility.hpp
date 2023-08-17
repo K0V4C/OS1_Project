@@ -16,11 +16,11 @@ namespace riscv {
     // ========================================= Main setup functions ==================================================
 
     void user_main_wrapper(void*);
-    void  set_interrupt_routine();
-    void thread_setup();
+    void setup_interrupt_routine();
+    void set_main_and_idle();
     void idle_thread(void*);
     void enable_interrupts();
-
+    void run_user_main();
     // =================================================================================================================
 
     // ========================================= Register functions ====================================================

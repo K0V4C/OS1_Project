@@ -14,49 +14,11 @@
 
 #define sys_call_code args[0]
 
-typedef TCB* thread_t;
 typedef KernelSemaphore* sem_t;
+typedef TCB* thread_t;
 
 inline void set_return_value(uint64 ret) {
     asm volatile ("mv a0, %[ret]": : [ret] "r"  (ret));
-}
-
-void print_status(uint64* arr) {
-    kvc::print_str("+----------------------------------------+\n");
-
-    kvc::print_void((void*)arr[0]);kvc::print_str("  <-- OP_CODE\n");
-    kvc::print_void((void*)arr[1]);kvc::print_str("  <-- A0\n");
-    kvc::print_void((void*)arr[2]);kvc::print_str("  <-- A1\n");
-    kvc::print_void((void*)arr[3]);kvc::print_str("  <-- A2\n");
-    kvc::print_void((void*)arr[4]);kvc::print_str("  <-- A3\n");
-
-    uint64 volatile scause = riscv::read_scause();
-    kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
-
-    uint64 volatile sepc = riscv::read_sepc();
-    kvc::print_void((void*)sepc);kvc::print_str("  <-- SEPC\n");
-
-    uint64 volatile stval = riscv::read_stval();
-    kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
-
-    kvc::print_str("+----------------------------------------+\n");
-}
-
-void panic(const char* msg) {
-    kvc::print_str(msg);kvc::new_line();
-    uint64 volatile scause = riscv::read_scause();
-    kvc::print_uint64(scause);kvc::print_str("  <-- SCAUSE\n");
-
-    uint64 volatile sepc = riscv::read_sepc();
-    kvc::print_void((void*)sepc);kvc::print_str("  <-- SEPC\n");
-
-    uint64 volatile stval = riscv::read_stval();
-    kvc::print_uint64(stval);kvc::print_str("  <-- STVAL\n");
-    volatile int stop = 0;
-    while(true) {
-        stop++;
-    }
-
 }
 
 extern "C" void handle_ecall_and_exception() {
@@ -70,24 +32,24 @@ extern "C" void handle_ecall_and_exception() {
     asm volatile("mv %[mem],  a4": [mem] "=r" (*(args+4)));
     // =================================================================================================================
 
-    // print_status(args);
+    // kvc::print_status(args);
 
     // ============================================= ERROR CONTROL =====================================================
     uint64 volatile scause = riscv::read_scause();
 
     if(scause == TRAP_TYPE::illegal_instruction)
-        panic("Illegal instruction");
+        kvc::panic("Illegal instruction");
 
     if (scause == TRAP_TYPE::illegal_read_address)
-        panic("Illegal read address");
+        kvc::panic("Illegal read address");
 
     if (scause == TRAP_TYPE::illegal_write_address)
-        panic("Illegal write address");
+        kvc::panic("Illegal write address");
 
     if(scause != TRAP_TYPE::user_ecall_interrupt && scause != TRAP_TYPE::system_ecall_interrupt) {
         kvc::print_str("\n------>This should not happen\n");
-        print_status(args);
-        panic("Unknown condition");
+        kvc::print_status(args);
+        kvc::panic("Unknown condition");
     }
     // =================================================================================================================
 
@@ -240,8 +202,8 @@ extern "C" void handle_ecall_and_exception() {
 
     else {
         kvc::print_str("\n------>OP CODE NOT FOUND\n");
-        print_status(args);
-        panic("NOT VALID OP CODE");
+        kvc::print_status(args);
+        kvc::panic("NOT VALID OP CODE");
     }
     // =================================================================================================================
 }
