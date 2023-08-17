@@ -82,7 +82,6 @@ void KernelSemaphore::unblock() {
 int KernelSemaphore::wait() {
     TCB::running->sem_return = 0;
     if(--sem_value < 0 ) block();
-    // todo test if this works
     return TCB::running->sem_return;
 }
 

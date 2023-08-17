@@ -1,7 +1,4 @@
 #include "../h/utility.hpp"
-#include "../h/output.hpp"
-#include "../h/syscall_c.h"
-#include "../h/syscall_cpp.hpp"
 
 auto main() -> int {
     riscv::setup_interrupt_routine();
@@ -17,7 +14,6 @@ auto main() -> int {
     maybe change how change_privalage works
     what does pop spp spie do?
     add destructors for threads?
-    clear all tasks
  */
 
 /* TODO:

@@ -40,6 +40,9 @@ void TCB::dispatch() {
 
     TCB::running = Scheduler::get();
 
+    // Dealocation, beware
+    if(old->get_state() == FINISHED) delete old;
+
     TCB::context_switch(&old->context, &running->context);
 }
 

@@ -35,7 +35,6 @@ int Thread::start() {
 }
 
 void Thread::join() {
-    // todo test join
     thread_join(this->myHandle);
 }
 
