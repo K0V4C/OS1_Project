@@ -177,6 +177,7 @@ extern "C" void handle_ecall_and_exception() {
 
     else if(sys_call_code == OP_CODES::c_time_sleep) {
         // time args[1]
+        // todo how can this return error
         TCB::put_to_sleep((uint64)args[1]);
         set_return_value(0);
     }
@@ -188,6 +189,7 @@ extern "C" void handle_ecall_and_exception() {
     }
 
     else if(sys_call_code == OP_CODES::c_getc) {
+        // todo how can this return EOF?
         KernelConsole::flush_input();
         char ret = KernelConsole::input_get();
         set_return_value(ret);

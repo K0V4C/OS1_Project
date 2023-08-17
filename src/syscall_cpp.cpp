@@ -14,9 +14,7 @@ void operator delete (void* ptr) {
 
 Thread::Thread(void (*body)(void *), void *arg) : myHandle(nullptr), body(body), arg(nullptr){}
 
-Thread::~Thread() {
-    // todo what here?
-}
+Thread::~Thread() {}
 
 void Thread::wrapper(void *arg) {
     if(arg)((Thread*)arg)->run();
