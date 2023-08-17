@@ -32,6 +32,8 @@ private:
 
     KernelConsole();
 
+    // todo add move and copy operators here
+
     static constexpr uint64 MAX_BUFFER_SIZE = 1024;
 
 public:

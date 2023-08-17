@@ -16,4 +16,6 @@ auto main() -> int {
     maybe change how change_privalage works
     what does pop spp spie do?
     join for cpp
+    clear all tasks
+    write tests
  */

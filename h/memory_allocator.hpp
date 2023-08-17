@@ -27,6 +27,8 @@ private:
     MemoryAllocator(MemoryAllocator&) = delete;
     MemoryAllocator(MemoryAllocator&&) = delete;
 
+    // todo add move and copy operators here
+
     static void join(FreeMem*);
     static void init_header(void*, uint64);
 

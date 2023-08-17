@@ -11,9 +11,11 @@ class TCB;
 class Scheduler {
 private:
 
-    //REDACTED
+    // REDACTED
     Scheduler(Scheduler&) = delete;
     Scheduler(Scheduler&&) = delete;
+
+    // todo add move and copy operators here
 
     // DEFAULT
     Scheduler() {}
