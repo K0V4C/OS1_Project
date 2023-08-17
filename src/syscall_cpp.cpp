@@ -24,7 +24,7 @@ void Thread::wrapper(void *arg) {
 
 int Thread::start() {
 
-    if(myHandle == 0)
+    if(myHandle != nullptr)
         return -1;
 
     if(body == nullptr ){
@@ -43,11 +43,10 @@ void Thread::dispatch() {
 }
 
 int Thread::sleep(time_t time) {
-
     return time_sleep(time);
 }
 
-Thread::Thread():body(nullptr), arg(nullptr){}
+Thread::Thread():body(nullptr), arg(nullptr), myHandle(nullptr){}
 
 Semaphore::Semaphore(unsigned int init) {
     sem_open(&myHandle, init);

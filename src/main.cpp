@@ -18,4 +18,5 @@ auto main() -> int {
     join for cpp
     clear all tasks
     write tests
+    add destructors for threads?
  */
