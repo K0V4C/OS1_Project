@@ -13,6 +13,18 @@
 
 namespace riscv {
 
+    // ========================================= Main setup functions ==================================================
+
+    void user_main_wrapper(void*);
+    void  set_interrupt_routine();
+    void thread_setup();
+    void idle_thread(void*);
+    void enable_interrupts();
+
+    // =================================================================================================================
+
+    // ========================================= Register functions ====================================================
+
     inline void mask_set_sstatus(uint64 mask){
         asm volatile(
                 "csrs sstatus, %[mask]"
@@ -146,7 +158,8 @@ namespace riscv {
         );
 
     }
-    
+
+    // =================================================================================================================
 
 }
 
