@@ -99,7 +99,7 @@ void TCB::unblock() {
 
 void TCB::add_blocked(TCB *tcb) {
    // Add deadlock guard
-   if(tcb->get_state() != TCB::State::FINISHED)
+   if(get_state() != TCB::State::FINISHED)
        join_queue->wait();
 }
 

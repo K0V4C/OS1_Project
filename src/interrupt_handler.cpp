@@ -109,7 +109,6 @@ extern "C" void handle_ecall_and_exception() {
         thread_t handle = (thread_t)args[1];
         handle->add_blocked(TCB::running);
         TCB::yield();
-
     }
 
     else if(sys_call_code == OP_CODES::c_sem_open) {

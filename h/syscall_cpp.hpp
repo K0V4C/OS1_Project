@@ -10,7 +10,6 @@
 void* operator new (size_t);
 void operator delete  (void*);
 
-
 class TCB;
 typedef TCB* thread_t;
 class Thread {

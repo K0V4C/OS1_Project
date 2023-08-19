@@ -12,7 +12,7 @@ void operator delete (void* ptr) {
     mem_free(ptr);
 }
 
-Thread::Thread(void (*body)(void *), void *arg) : myHandle(nullptr), body(body), arg(nullptr){}
+Thread::Thread(void (*body)(void *), void *arg) : myHandle(nullptr), body(body), arg(arg){}
 
 Thread::~Thread() {}
 
