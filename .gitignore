@@ -6,7 +6,7 @@ kernel.asm
 .vscode
 *.s
 test
-
+custom_tests
 
 
 
