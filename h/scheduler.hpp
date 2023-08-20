@@ -1,7 +1,3 @@
-//
-// Created by lazar on 6/22/23.
-//
-
 #ifndef SCHEDULER_HPP
 #define SCHEDULER_HPP
 

@@ -1,7 +1,3 @@
-//
-// Created by lazar on 6/24/23.
-//
-
 #ifndef KERNEL_SEMAPHORE_HPP
 #define KERNEL_SEMAPHORE_HPP
 

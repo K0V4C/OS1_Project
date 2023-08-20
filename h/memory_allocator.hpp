@@ -1,9 +1,3 @@
-
-
-//
-// Created by lazar on 5/10/23.
-//
-
 #ifndef MEMORYALLOCATOR_H
 #define MEMORYALLOCATOR_H
 

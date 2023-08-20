@@ -1,8 +1,3 @@
-
-//
-// Created by lazar on 5/12/23.
-//
-
 #ifndef UTILITY_H
 #define UTILITY_H
 

@@ -1,7 +1,3 @@
-//
-// Created by lazar on 8/17/23.
-//
-
 #include "../h/utility.hpp"
 #include "../h/syscall_c.h"
 #include "../h/bit_masks.hpp"

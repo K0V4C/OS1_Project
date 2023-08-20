@@ -1,7 +1,3 @@
-//
-// Created by lazar on 5/15/23.
-//
-
 #ifndef SYS_CALLS_H
 #define SYS_CALLS_H
 

@@ -1,7 +1,3 @@
-//
-// Created by lazar on 5/15/23.
-//
-
 #include "../h/interrupt_handler.hpp"
 #include "../h/utility.hpp"
 #include "../h/output.hpp"

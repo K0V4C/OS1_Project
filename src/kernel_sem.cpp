@@ -1,7 +1,3 @@
-//
-// Created by lazar on 6/24/23.
-//
-
 #include "../h/kernel_sem.hpp"
 #include "../h/output.hpp"
 #include "../h/scheduler.hpp"

@@ -1,6 +1,3 @@
-//
-// Created by lazar on 5/16/23.
-//
 #include "../h/syscall_c.h"
 #include "../h/syscall_cpp.hpp"
 #include "../lib/console.h"

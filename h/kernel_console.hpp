@@ -1,7 +1,3 @@
-//
-// Created by lazar on 8/15/23.
-//
-
 #ifndef KERNEL_CONSOLE_HPP
 #define KERNEL_CONSOLE_HPP
 #include "../lib/hw.h"

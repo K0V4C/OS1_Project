@@ -1,7 +1,3 @@
-//
-// Created by lazar on 8/15/23.
-//
-
 #include "../h/kernel_console.hpp"
 #include "../h/memory_allocator.hpp"
 

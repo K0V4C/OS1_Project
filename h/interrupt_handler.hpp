@@ -1,7 +1,3 @@
-//
-// Created by lazar on 5/15/23.
-//
-
 #ifndef INTERRUPT_HANDLER
 #define INTERRUPT_HANDLER
 

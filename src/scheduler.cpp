@@ -1,6 +1,3 @@
-//
-// Created by lazar on 6/22/23.
-//
 
 #include "../h/scheduler.hpp"
 #include "../h/memory_allocator.hpp"

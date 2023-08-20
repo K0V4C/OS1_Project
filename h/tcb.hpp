@@ -1,7 +1,3 @@
-//
-// Created by lazar on 6/22/23.
-//
-
 // Whole class inspired by videos from practices
 
 #ifndef TCB_HPP

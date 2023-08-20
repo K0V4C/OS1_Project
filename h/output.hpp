@@ -1,7 +1,3 @@
-//
-// Created by lazar on 5/16/23.
-//
-
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
