@@ -158,6 +158,7 @@ void TCB::put_to_sleep(uint64 time) {
             iter_prev->next = new_node;
         } else {
             // Insert in the middle
+            iter_current->timer -= new_node->timer;
             iter_prev->next = new_node;
             new_node->next = iter_current;
         }
