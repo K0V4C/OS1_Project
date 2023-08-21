@@ -190,13 +190,6 @@ extern "C" void handle_ecall_and_exception() {
         set_return_value(ret);
     }
 
-    else if (sys_call_code == OP_CODES::mode_switch) {
-        //change to user mode
-        uint64 volatile sstatus =  riscv::read_sstatus();
-        sstatus = sstatus & (~SStatus::SSTATUS_SPP);
-        riscv::write_sstatus(sstatus);
-    }
-
     else {
         kvc::print_str("\n------>OP CODE NOT FOUND\n");
         kvc::print_status(args);
@@ -228,7 +221,7 @@ extern "C" void handle_hardware_interrupt() {
 
     uint64 interrupt_number = plic_claim();
     plic_complete((int)interrupt_number);
-    riscv::mask_clear_sstatus(SStatus::SSTATUS_SPP);
+    riscv::mask_clear_sip(SIP::SIP_SSIP);
 
     if(interrupt_number == CONSOLE_IRQ){
         KernelConsole::flush_input();

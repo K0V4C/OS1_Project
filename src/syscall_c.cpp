@@ -114,7 +114,3 @@ void putc(char a) {
     asm volatile ("mv a0, %[a]": : [a] "r"  (a));
     set_and_ecall(OP_CODES::c_putc);
 }
-
-void change_privilege() {
-    set_and_ecall(OP_CODES::mode_switch);
-}

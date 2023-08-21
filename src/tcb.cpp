@@ -10,8 +10,10 @@
 
 TCB* TCB::running = 0;
 uint64 TCB::time_slice_counter = 0;
+bool TCB::run_mode = false;
 
 void TCB::pop_spp_spie() {
+    if(TCB::run_mode) riscv::mask_clear_sstatus(SStatus::SSTATUS_SPP);
     asm volatile ("csrw sepc, ra");
     asm volatile ("sret");
 }
@@ -163,6 +165,10 @@ void TCB::put_to_sleep(uint64 time) {
 
     TCB::running->set_state(State::SLEEPING);
     TCB::yield();
+}
+
+void TCB::set_user_mode(bool value) {
+    run_mode = value;
 }
 
 
