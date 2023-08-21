@@ -23,6 +23,7 @@ void riscv::setup_interrupt_routine() {
 }
 
 void riscv::set_main_and_idle() {
+    TCB::set_thread_mode(TCB::SUPERVISOR);
     thread_t main_thread, loop_thread;
 
     thread_create(&main_thread, nullptr, nullptr);
@@ -36,8 +37,7 @@ void riscv::enable_interrupts() {
 }
 
 void riscv::run_user_main() {
-    thread_dispatch();
-    TCB::set_user_mode(true);
+    TCB::set_thread_mode(TCB::USER);
     thread_t user_main;
     thread_create(&user_main, riscv::user_main_wrapper, nullptr);
     // Wait for user main to finish

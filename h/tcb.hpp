@@ -16,6 +16,11 @@ public:
         SLEEPING,
     };
 
+    enum Mode {
+        SUPERVISOR,
+        USER,
+    };
+
 private:
 
     // ========================================= For TCB FIELDS ========================================================
@@ -24,7 +29,8 @@ private:
     char* stack;
     uint64 time_slice;
     State state;
-    static bool run_mode;
+    static Mode new_threads_mode;
+    Mode thread_mode;
 
     void* arg;
 
@@ -85,7 +91,7 @@ public:
     static void yield();
     static void dispatch();
     static void context_switch(Context* old_context, Context* new_context);
-    static void set_user_mode(bool);
+    static void set_thread_mode(Mode);
 
     static TCB* create_thread(TCB::Body body, void* stack, void* arg);
 

@@ -10,10 +10,14 @@
 
 TCB* TCB::running = 0;
 uint64 TCB::time_slice_counter = 0;
-bool TCB::run_mode = false;
+TCB::Mode TCB::new_threads_mode = TCB::Mode::SUPERVISOR;
 
 void TCB::pop_spp_spie() {
-    if(TCB::run_mode) riscv::mask_clear_sstatus(SStatus::SSTATUS_SPP);
+    if(TCB::running->thread_mode == TCB::Mode::USER) {
+        riscv::mask_clear_sstatus(SStatus::SSTATUS_SPP);
+    } else {
+        riscv::mask_set_sstatus(SStatus::SSTATUS_SPP);
+    }
     asm volatile ("csrw sepc, ra");
     asm volatile ("sret");
 }
@@ -85,6 +89,7 @@ TCB::TCB(TCB::Body body, uint64 time_slice, void *stack, void *arg):
 
         join_queue = KernelSemaphore::create_semaphore(0);
         sem_return = 0;
+        thread_mode = new_threads_mode;
 
         if(body) Scheduler::put(this);
 }
@@ -166,8 +171,8 @@ void TCB::put_to_sleep(uint64 time) {
     TCB::yield();
 }
 
-void TCB::set_user_mode(bool value) {
-    run_mode = value;
+void TCB::set_thread_mode(Mode val) {
+    new_threads_mode = val;
 }
 
 
