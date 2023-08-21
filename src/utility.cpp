@@ -9,7 +9,6 @@ void userMain();
 
 
 void riscv::user_main_wrapper(void*) {
-    TCB::set_user_mode(true);
     userMain();
 }
 
@@ -37,6 +36,8 @@ void riscv::enable_interrupts() {
 }
 
 void riscv::run_user_main() {
+    thread_dispatch();
+    TCB::set_user_mode(true);
     thread_t user_main;
     thread_create(&user_main, riscv::user_main_wrapper, nullptr);
     // Wait for user main to finish
