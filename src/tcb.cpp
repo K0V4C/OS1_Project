@@ -22,7 +22,6 @@ TCB *TCB::create_thread(TCB::Body body, void* stack, void* arg) {
     return new TCB(body, TIME_SLICE, stack, arg);
 }
 void TCB::yield() {
-    // todo zasto moram da pamtim sepc i sstatus
     uint64 volatile sepc = riscv::read_sepc();
     uint64 volatile sstatus = riscv::read_sstatus();
     TCB::dispatch();
