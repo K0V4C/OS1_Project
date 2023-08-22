@@ -46,7 +46,6 @@ protected:
     void run() override;
 private:
     time_t period;
-    bool die;
 };
 
 class Console {

@@ -60,14 +60,14 @@ int Semaphore::signal() {
 }
 
 void PeriodicThread::terminate() {
-    die = true;
+    period = 0;
 }
 
 PeriodicThread::PeriodicThread(time_t period)
-    : period(period), die(false) {}
+    : period(period) {}
 
 void PeriodicThread::run() {
-    while(!die) {
+    while(period != 0) {
         periodicActivation();
         time_sleep(period);
     }
