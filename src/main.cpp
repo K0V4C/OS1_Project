@@ -9,16 +9,11 @@ auto main() -> int {
     return 0;
 }
 
-/* TODO:
-    REFACTOR
-    maybe change how change_privalage works
-    what does pop spp spie do?
-    add destructors for threads?
- */
+/*
+    Helped in development:
 
-/* TODO:
-    Test sem -1
-    Test Periodic thread
-    Test join
-    clear all tasks
+    A memory allocator class, which was influenced by the second question from the April 2014 curriculum.
+    A semaphore class, taking cues from the content found on page 273 of "Osnovi Operativnih sistema."
+    The Console class, which was influenced by the first question of the second curriculum from June 2018.
+    The TCB class and context switch mechanism were made with help from instructional videos.
  */
